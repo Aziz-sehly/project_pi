@@ -1,0 +1,109 @@
+{% extends 'back.html.twig' %}
+
+{% block title %}Détails de la Réservation{% endblock %}
+
+{% block body %}
+    <div class="container my-5 p-4 bg-light rounded">
+        <h1 class="text-center text-primary mb-4">Détails de la Réservation</h1>
+
+        <table class="table table-bordered table-hover">
+            <tbody>
+                <tr>
+                    <th>ID</th>
+                    <td>{{ booking.id }}</td>
+                </tr>
+                <tr>
+                    <th>Utilisateur</th>
+                    <td>{{ booking.utilisateur }}</td>
+                </tr>
+                <tr>
+                    <th>Check-in</th>
+                    <td>{{ booking.checkIn ? booking.checkIn|date('Y-m-d') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>Check-out</th>
+                    <td>{{ booking.checkOut ? booking.checkOut|date('Y-m-d') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>Montant Total (€)</th>
+                    <td>{{ booking.montantTotal }} €</td>
+                </tr>
+                <tr>
+                    <th>Nombre d'Invités</th>
+                    <td>{{ booking.numberOfGuest }}</td>
+                </tr>
+                <tr>
+                    <th>Méthode de Paiement</th>
+                    <td>{{ booking.payementMethod }}</td>
+                </tr>
+                <tr>
+                    <th>Demande Spéciale</th>
+                    <td>{{ booking.specialRequest }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between mt-4">
+            <a href="{{ path('app_booking_index') }}" class="btn btn-secondary btn-lg">
+                <i class="fas fa-arrow-left"></i> Retour à la liste
+            </a>
+            <a href="{{ path('app_booking_edit', {'id': booking.id}) }}" class="btn btn-warning btn-lg">
+                <i class="fas fa-edit"></i> Éditer
+            </a>
+            {{ include('booking/_delete_form.html.twig', {'class': 'd-inline-block'}) }}
+        </div>
+    </div>
+
+    <style>
+        .container {
+            max-width: 800px;
+            background-color: #f8f9fa;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        table {
+            margin-bottom: 20px;
+        }
+
+        th {
+            width: 30%;
+            background-color: #e9ecef;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        td {
+            font-size: 1.1rem;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .d-flex > a, .d-flex > form {
+            margin-right: 10px;
+        }
+    </style>
+{% endblock %}

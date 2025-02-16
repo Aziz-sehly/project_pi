@@ -1,0 +1,115 @@
+{% extends 'back.html.twig' %}
+
+{% block title %}Modifier la Réservation{% endblock %}
+
+{% block body %}
+    <div class="container my-5 p-4 bg-white rounded-lg shadow-lg">
+        <h1 class="text-center text-primary mb-4">Modifier la Réservation</h1>
+
+        <div class="form-section mb-4 p-4 bg-light rounded">
+            {{ include('booking/_form.html.twig', {'button_label': 'Mettre à jour', 'attr': {'class': 'form-group'}}) }}
+        </div>
+
+        <div class="d-flex justify-content-between mt-4">
+            <a href="{{ path('app_booking_index') }}" class="btn btn-secondary btn-lg">
+                <i class="fas fa-arrow-left"></i> Retour à la liste
+            </a>
+            <div>
+                {{ include('booking/_delete_form.html.twig', {'class': 'd-inline-block'}) }}
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Container général */
+        .container {
+            max-width: 900px;
+            background-color: #f9f9f9;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+        }
+
+        /* Titre principal */
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #007bff;
+        }
+
+        /* Section du formulaire */
+        .form-section {
+            padding: 25px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            box-shadow: none;
+            padding: 12px;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
+        }
+
+        /* Style des boutons */
+        .btn {
+            font-size: 1.125rem;
+            font-weight: 500;
+            padding: 12px 25px;
+            border-radius: 6px;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        /* Espacement pour la suppression */
+        .d-flex > a, .d-flex > form {
+            margin-right: 12px;
+        }
+
+        /* Mise en valeur des liens */
+        .d-flex > a {
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .d-flex > a:hover {
+            text-decoration: underline;
+        }
+
+        /* Design pour la suppression du formulaire */
+        .d-inline-block {
+            display: inline-block;
+            margin-left: 15px;
+        }
+    </style>
+{% endblock %}

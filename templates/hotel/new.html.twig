@@ -1,0 +1,232 @@
+{% extends 'back.html.twig' %}
+
+{% block title %}Gestion Hôtelière{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Style global */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .form-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 40px;
+        }
+
+        .form-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            font-size: 1rem;
+            padding: 15px;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .form-control.is-invalid {
+            border-color: #dc3545;
+        }
+
+        .invalid-feedback {
+            display: block;
+            color: #dc3545;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            font-size: 1.1rem;
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .btn-back {
+            background-color: #6c757d;
+            color: white;
+            font-size: 1rem;
+            padding: 10px 20px;
+            text-align: center;
+            border-radius: 5px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .btn-back:hover {
+            background-color: #5a6268;
+            color: white;
+        }
+
+        .d-grid {
+            display: grid;
+            justify-items: center;
+        }
+
+        .d-grid .btn-back {
+            width: auto;
+        }
+
+        .container {
+            max-width: 900px;
+        }
+
+        /* Small adjustments for mobile */
+        @media (max-width: 767px) {
+            .form-card {
+                padding: 30px;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="form-card">
+                <h2 class="mb-4 text-center text-primary fw-bold">
+                    {% if hotel.id %}
+                        ✏️ Modifier l'Hôtel
+                    {% else %}
+                        🏨 Nouvel Hôtel
+                    {% endif %}
+                </h2>
+
+                {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+
+                    <!-- Région -->
+                    <div class="mb-4">
+                        {{ form_label(form.region, 'Région *', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.region, {
+                            'attr': {
+                                'class': 'form-control' ~ (form.region.vars.valid ? '' : ' is-invalid'),
+                                'placeholder': 'Ex: Provence-Alpes-Côte d\'Azur',
+                                'maxlength': 255
+                            }
+                        }) }}
+                        <div class="invalid-feedback">
+                            {{ form_errors(form.region)|striptags }}
+                        </div>
+                    </div>
+
+                    <!-- Nom -->
+                    <div class="mb-4">
+                        {{ form_label(form.nom, 'Nom de l\'hôtel *', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.nom, {
+                            'attr': {
+                                'class': 'form-control' ~ (form.nom.vars.valid ? '' : ' is-invalid'),
+                                'placeholder': 'Ex: Le Negresco',
+                                'maxlength': 255
+                            }
+                        }) }}
+                        <div class="invalid-feedback">
+                            {{ form_errors(form.nom)|striptags }}
+                        </div>
+                    </div>
+
+                    <!-- Adresse -->
+                    <div class="mb-4">
+                        {{ form_label(form.adresse, 'Adresse complète *', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.adresse, {
+                            'attr': {
+                                'class': 'form-control' ~ (form.adresse.vars.valid ? '' : ' is-invalid'),
+                                'placeholder': 'Ex: 37 Promenade des Anglais, Nice',
+                                'maxlength': 255
+                            }
+                        }) }}
+                        <div class="invalid-feedback">
+                            {{ form_errors(form.adresse)|striptags }}
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-4">
+                        {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.description, {
+                            'attr': {
+                                'class': 'form-control' ~ (form.description.vars.valid ? '' : ' is-invalid'),
+                                'placeholder': 'Décrivez les particularités de l\'hôtel...',
+                                'rows': 4,
+                                'maxlength': 255
+                            }
+                        }) }}
+                        <div class="invalid-feedback">
+                            {{ form_errors(form.description)|striptags }}
+                        </div>
+                    </div>
+
+                    <!-- Contact Email -->
+                    <div class="mb-4">
+                        {{ form_label(form.contact_email, 'Email de contact *', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.contact_email, {
+                            'attr': {
+                                'class': 'form-control' ~ (form.contact_email.vars.valid ? '' : ' is-invalid'),
+                                'placeholder': 'Ex: contact@lenegresco.com'
+                            }
+                        }) }}
+                        <div class="invalid-feedback">
+                            {{ form_errors(form.contact_email)|striptags }}
+                        </div>
+                    </div>
+
+                    <!-- Téléphone -->
+                    <div class="mb-5">
+                        {{ form_label(form.phone, 'Téléphone *', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.phone, {
+                            'attr': {
+                                'class': 'form-control' ~ (form.phone.vars.valid ? '' : ' is-invalid'),
+                                'placeholder': 'Ex: +33493161600',
+                                'pattern': '^\+?[0-9\s\-\(\)]{6,20}$'
+                            }
+                        }) }}
+                        <small class="form-text text-muted mt-2">Format international accepté : +33 4 93 16 16 00 ou 0493161600</small>
+                        <div class="invalid-feedback">
+                            {{ form_errors(form.phone)|striptags }}
+                        </div>
+                    </div>
+
+                    <!-- Bouton Submit -->
+                    <div class="d-grid mb-4">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            {% if hotel.id %}
+                                📥 Mettre à jour
+                            {% else %}
+                                🚀 Créer l'hôtel
+                            {% endif %}
+                        </button>
+                    </div>
+
+                {{ form_end(form) }}
+
+                <!-- Bouton Retour à la liste des hôtels -->
+                <div class="d-grid mt-4">
+                    <a href="{{ path('app_hotel_index') }}" class="btn btn-back">
+                        ↩ Retour à la liste des hôtels
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
