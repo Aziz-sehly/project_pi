@@ -1,0 +1,285 @@
+{% extends 'back.html.twig' %}
+
+{% block title %}Gestion des Réservations{% endblock %}
+
+{% block body %}
+    <div class="management-container">
+        <div class="management-header">
+            <h1 class="management-title">Gestion des Réservations</h1>
+            <a href="{{ path('app_booking_new') }}" class="create-button">
+                <i class="fas fa-plus-circle me-2"></i>Nouvelle Réservation
+            </a>
+        </div>
+
+        <div class="management-table-container">
+            <table class="management-table">
+                <thead>
+                    <tr>
+                        <th class="text-center">ID</th>
+                        <th>Client</th>
+                        <th class="text-center">Hôtel</th> <!-- Nouvelle colonne -->
+                        <th class="text-center">Période</th>
+                        <th class="text-center">Montant en avance </th>
+                        <th class="text-center">Invités</th>
+                        <th class="text-center">Paiement</th>
+                        <th class="text-center">Statut</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for booking in bookings %}
+                    <tr>
+                        <td class="text-center fw-bold">#{{ booking.id }}</td>
+                        <td>
+                            <div class="client-info">
+                                <div class="client-name">{{ booking.utilisateur }}</div>
+                                <div class="client-request">{{ booking.specialRequest|default('Aucune demande spéciale') }}</div>
+                            </div>
+                        </td>
+                        <td class="text-center"> <!-- Nouvelle cellule pour l'hôtel -->
+                            <div class="hotel-name">{{ booking.idHotel.nom|default('Aucun hôtel') }}</div>
+                        </td>
+                        <td class="text-center">
+                            <div class="date-range">
+                                <div class="check-in">{{ booking.checkIn|date('d/m/Y') }}</div>
+                                <div class="text-muted"><i class="fas fa-arrow-right"></i></div>
+                                <div class="check-out">{{ booking.checkOut|date('d/m/Y') }}</div>
+                            </div>
+                        </td>
+                        <td class="text-center">{{ booking.montantTotal }} €</td>
+                        <td class="text-center">{{ booking.numberOfGuest }}</td>
+                        <td class="text-center">
+                            <span class="payment-method {{ booking.payementMethod|lower }}">
+                                {{ booking.payementMethod }}
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <span class="status-badge confirmed">Confirmée</span>
+                        </td>
+                        <td class="text-center actions">
+                            <a href="{{ path('app_booking_show', {'id': booking.id}) }}" class="action-btn view" title="Détails">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{{ path('app_booking_edit', {'id': booking.id}) }}" class="action-btn edit" title="Modifier">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="{{ path('app_booking_delete', {'id': booking.id}) }}" method="post" class="d-inline">
+                                <button type="submit" class="action-btn delete" title="Supprimer">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="9" class="text-center empty-state"> <!-- Ajuster le colspan -->
+                            <i class="fas fa-calendar-times fa-2x mb-3"></i>
+                            <p>Aucune réservation trouvée</p>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <style>
+        /* Design System */
+        :root {
+            --primary-color: #2A2E45;
+            --secondary-color: #5C6B73;
+            --accent-color: #7D8CC4;
+            --success-color: #4CAF50;
+            --warning-color: #FFC107;
+            --error-color: #F44336;
+            --background-light: #F8F9FA;
+            --text-dark: #2A2E45;
+            --text-light: #FFFFFF;
+        }
+
+        .management-container {
+            max-width: 1440px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .management-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            padding: 1rem 0;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .management-title {
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .create-button {
+            background: var(--accent-color);
+            color: var(--text-light);
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .create-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(124, 140, 196, 0.3);
+            color: var(--text-light);
+        }
+
+        .management-table-container {
+            background: var(--text-light);
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .management-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        .management-table thead {
+            background: var(--primary-color);
+            color: var(--text-light);
+        }
+
+        .management-table th {
+            padding: 1.2rem 1rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .management-table td {
+            padding: 1.2rem 1rem;
+            border-bottom: 1px solid #EDF2F7;
+        }
+
+        .client-info {
+            line-height: 1.4;
+        }
+
+        .client-name {
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        .client-request {
+            font-size: 0.875rem;
+            color: var(--secondary-color);
+            margin-top: 0.3rem;
+        }
+
+        .date-range {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+
+        .payment-method {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .payment-method.credit-card {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .payment-method.paypal {
+            background: #FFF3E0;
+            color: #EF6C00;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-badge.confirmed {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            border: none;
+            background: transparent;
+        }
+
+        .action-btn.view {
+            color: var(--primary-color);
+            background: rgba(42, 46, 69, 0.1);
+        }
+
+        .action-btn.edit {
+            color: var(--accent-color);
+            background: rgba(125, 140, 196, 0.1);
+        }
+
+        .action-btn.delete {
+            color: var(--error-color);
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .empty-state {
+            padding: 3rem 1rem;
+            color: var(--secondary-color);
+            background: var(--background-light);
+        }
+
+        @media (max-width: 768px) {
+            .management-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .management-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .date-range {
+                flex-direction: column;
+                gap: 0.2rem;
+            }
+        }
+    </style>
+{% endblock %}
