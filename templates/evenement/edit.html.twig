@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier l'Événement{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4 rounded-4 border-0" style="background-color: white; max-width: 700px; margin: auto;">
+        <h1 class="text-center text-primary fw-bold mb-4">Modifier l'Événement</h1>
+
+        <div class="p-3 shadow-sm rounded bg-light">
+            <!-- Form for updating the event -->
+            <form method="post" action="{{ path('app_evenement_edit', {'id': evenement.id}) }}">
+                {{ form_start(form) }}
+                {{ form_row(form) }}
+                <div class="d-flex justify-content-between mt-4">
+                    <!-- Bouton Mettre à jour coloré en vert -->
+                    <a href="{{ path('app_evenement_index') }}" class="btn btn-outline-secondary fw-semibold">
+                        <i class="bi bi-arrow-left"></i> Retour à la liste
+                    </a>
+
+                    <!-- Submit button for updating the event -->
+                    <button type="submit" class="btn btn-success fw-semibold">
+                        <i class="bi bi-check-circle"></i> Mettre à jour
+                    </button>
+                </div>
+                {{ form_end(form) }}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

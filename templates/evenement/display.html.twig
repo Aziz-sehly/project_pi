@@ -1,0 +1,76 @@
+{% extends 'front.html.twig' %}
+
+{% block title %}Nos Événements{% endblock %}
+
+{% block body %}
+<div class="container mt-5 p-4 shadow-lg rounded" style="background-color: white;">
+    <h1 class="text-center text-dark fw-bold">Liste des Événements</h1>
+
+    <!-- Horizontal scrolling container -->
+    <div class="events-carousel-wrapper">
+        <div class="d-flex flex-nowrap pb-3" style="gap: 2rem; padding-left: 1rem; min-height: 250px;">
+            {% for evenement in evenements %}
+                <div class="col-auto">
+                    <div class="single-list-topics-content card shadow-sm" style="min-width: 300px; flex-shrink: 0;">
+                        <!-- Event Image -->
+                        <img src="{{ asset('assets/images/blog/b1.jpg') }}" class="card-img-top" alt="Image de l'événement" style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title text-dark fw-bold">{{ evenement.nom }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ evenement.region }}</h6>
+                            <p class="card-text">{{ evenement.description|slice(0, 100) }}...</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-primary">{{ evenement.prix }} €</span>
+                                <small class="text-muted">{{ evenement.date ? evenement.date|date('d/m/Y H:i') : 'Non défini' }}</small>
+                            </div>
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{{ path('app_participation_new', {'id': evenement.id}) }}" class="btn btn-orange btn-sm">
+                                Réserver
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12 text-center text-muted">
+                    <p>Aucun événement trouvé.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Scrollbar cachée mais fonctionnelle */
+    .events-carousel-wrapper {
+        overflow-x: auto;
+        padding-bottom: 1rem;
+        -ms-overflow-style: none;  /* IE/Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+
+    .events-carousel-wrapper::-webkit-scrollbar {
+        display: none;  /* Chrome/Safari/Opera */
+    }
+
+    .d-flex {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: nowrap;
+        padding-right: 1rem; /* Compensation pour l'espace final */
+    }
+
+    .col-auto {
+        flex-shrink: 0;
+    }
+
+    .btn-orange {
+        background-color: #ff7f32;
+        border-color: #ff7f32;
+    }
+
+    .btn-orange:hover {
+        background-color: #ff6a1f;
+        border-color: #ff6a1f;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,169 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un Événement{% endblock %}
+
+{% block body %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-lg p-5" style="max-width: 600px; width: 100%; border-radius: 10px;">
+        <h2 class="text-center mb-4 text-primary fw-bold">Créer un Nouvel Événement</h2>
+
+        {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
+
+        {{ form_errors(form) }}
+
+        {# Region Field #}
+        <div class="mb-3">
+            {{ form_label(form.region, 'Région *', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+            <div class="invalid-feedback d-block">
+                {{ form_errors(form.region) }}
+            </div>
+            {{ form_widget(form.region, {
+                'attr': {
+                    'class': 'form-control' ~ (form.region.vars.valid ? '' : ' is-invalid'),
+                    'placeholder': 'Entrez la région'
+                }
+            }) }}
+        </div>
+
+        {# Nom Field #}
+        <div class="mb-3">
+            {{ form_label(form.nom, 'Nom *', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+            <div class="invalid-feedback d-block">
+                {{ form_errors(form.nom) }}
+            </div>
+            {{ form_widget(form.nom, {
+                'attr': {
+                    'class': 'form-control' ~ (form.nom.vars.valid ? '' : ' is-invalid'),
+                    'placeholder': 'Nom de l\'événement'
+                }
+            }) }}
+        </div>
+
+        {# Description Field #}
+        <div class="mb-3">
+            {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+            <div class="invalid-feedback d-block">
+                {{ form_errors(form.description) }}
+            </div>
+            {{ form_widget(form.description, {
+                'attr': {
+                    'class': 'form-control' ~ (form.description.vars.valid ? '' : ' is-invalid'),
+                    'rows': 4,
+                    'placeholder': 'Description détaillée de l\'événement'
+                }
+            }) }}
+        </div>
+
+        {# Date Field #}
+        <div class="mb-3">
+            {{ form_label(form.date, 'Date *', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+            <div class="invalid-feedback d-block">
+                {{ form_errors(form.date) }}
+            </div>
+            {{ form_widget(form.date, {
+                'attr': {
+                    'class': 'form-control' ~ (form.date.vars.valid ? '' : ' is-invalid'),
+                    'min': "now"|date('Y-m-d\TH:i')
+                }
+            }) }}
+        </div>
+
+        {# Capacite Field #}
+        <div class="mb-3">
+            {{ form_label(form.capacite, 'Capacité *', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+            <div class="invalid-feedback d-block">
+                {{ form_errors(form.capacite) }}
+            </div>
+            <div class="input-group">
+                {{ form_widget(form.capacite, {
+                    'attr': {
+                        'class': 'form-control' ~ (form.capacite.vars.valid ? '' : ' is-invalid'),
+                        'min': 1,
+                        'placeholder': 'Nombre de places disponibles'
+                    }
+                }) }}
+                <span class="input-group-text">personnes</span>
+            </div>
+        </div>
+
+        {# Prix Field #}
+        <div class="mb-3">
+            {{ form_label(form.prix, 'Prix *', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+            <div class="invalid-feedback d-block">
+                {{ form_errors(form.prix) }}
+            </div>
+            <div class="input-group">
+                {{ form_widget(form.prix, {
+                    'attr': {
+                        'class': 'form-control' ~ (form.prix.vars.valid ? '' : ' is-invalid'),
+                        'min': 0,
+                        'step': '0.01',
+                        'placeholder': '00.00'
+                    }
+                }) }}
+                <span class="input-group-text">€</span>
+            </div>
+        </div>
+
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg fw-semibold">
+                <i class="fas fa-calendar-plus me-2"></i>Créer l'événement
+            </button>
+            <a href="{{ path('app_evenement_index') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Retour à la liste
+            </a>
+            <a href="{{ path('app_participation_index') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>liste des participation
+            </a>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+</div>
+
+<style>
+    .invalid-feedback {
+        color: #dc3545;
+        font-size: 0.875em;
+        margin-top: -0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .is-invalid {
+        border-color: #dc3545 !important;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right calc(0.375em + 0.1875rem) center;
+        background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+    }
+</style>
+
+{% block javascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Bootstrap validation
+    (function () {
+        'use strict'
+        const forms = document.querySelectorAll('.needs-validation')
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+    
+    // Date picker enhancement
+    flatpickr('.datetimepicker', {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        minDate: "today",
+        locale: "fr"
+    });
+})
+</script>
+{% endblock %}
+{% endblock %}
