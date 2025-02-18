@@ -7,7 +7,20 @@
     <div class="card p-5 shadow-lg rounded-lg" style="max-width: 700px; width: 100%; background-color: #ffffff;">
         <h3 class="text-center text-primary mb-4">Créer une réservation</h3>
 
-        {{ form_start(form, { 'attr': {'novalidate': 'novalidate'} }) }}
+        {# Added an id to the form for easier JavaScript handling #}
+        {% for message in app.flashes('success') %}
+    <div class="alert alert-success mt-3">
+        {{ message }}
+    </div>
+{% endfor %}
+
+{% for message in app.flashes('error') %}
+    <div class="alert alert-danger mt-3">
+        {{ message }}
+    </div>
+{% endfor %}
+
+        {{ form_start(form, { 'attr': {'novalidate': 'novalidate', 'id': 'reservationForm'} }) }}
 
         <div class="mb-4">
             <label for="{{ form.utilisateur.vars.id }}" class="form-label text-muted">Nom de l'utilisateur</label>
@@ -74,11 +87,16 @@
         </div>
 
         <div class="d-grid gap-2 mb-3">
-            <button type="submit" class="btn btn-primary btn-lg">Enregistrer la réservation</button>
+            <button type="submit" class="btn btn-primary btn-lg" id="submitButton">Enregistrer la réservation</button>
+        </div>
+
+        {# Hidden success message that will display after submission #}
+        <div id="successMessage" class="alert alert-success mt-3" style="display: none;">
+            Réservation enregistrée avec succès !
         </div>
 
         <div class="d-grid gap-2">
-            <a href="{{ path('hotel_liste') }}" class="btn btn-secondary btn-lg">annuler la reservation</a>
+            <a href="{{ path('hotel_liste') }}" class="btn btn-secondary btn-lg">Annuler la réservation</a>
         </div>
 
         {{ form_end(form) }}
@@ -97,7 +115,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background: linear-gradient(135deg, #f0f2f5, #dde1e7); /* Doux gradient */
+        background: linear-gradient(135deg, #f0f2f5, #dde1e7);
     }
 
     .card {
@@ -164,7 +182,6 @@
         background-color: #5a6268;
     }
 
-    /* Adding some spacing around the fields for a better structure */
     .mb-4 {
         margin-bottom: 1.5rem;
     }
@@ -173,4 +190,6 @@
         margin-top: 20px;
     }
 </style>
+
+
 {% endblock %}
