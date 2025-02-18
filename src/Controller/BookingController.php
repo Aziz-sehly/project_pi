@@ -24,7 +24,7 @@ class BookingController extends AbstractController
         ]);
     }
 
-   #[Route('/new/{id?}', name: 'app_booking_new', methods: ['GET', 'POST'])]
+    #[Route('/new/{id?}', name: 'app_booking_new', methods: ['GET', 'POST'])]
 public function new(
     Request $request,
     EntityManagerInterface $entityManager,
@@ -58,7 +58,7 @@ public function new(
             $entityManager->persist($booking);
             $entityManager->flush();
             $this->addFlash('success', 'Booking created successfully!');
-            return $this->redirectToRoute('app_booking_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_booking_new', [], Response::HTTP_SEE_OTHER);
         } catch (\Exception $e) {
             $this->addFlash('error', 'Error occurred while creating booking: '.$e->getMessage());
         }
