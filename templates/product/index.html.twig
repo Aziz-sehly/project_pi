@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Product List{% endblock %}
+
+{% block body %}
+<div class="container mt-5 p-4 shadow-lg rounded" style="background-color: white;">
+    <h1 class="text-center text-primary fw-bold">Product List</h1>
+
+    <div class="d-flex justify-content-end mb-3">
+        <a href="{{ path('app_product_new') }}" class="btn btn-success fw-semibold">
+            Add Product
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover table-striped border shadow-sm">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th>#</th>
+                    <th>Region</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Stock</th>
+                    <th>Price (€)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+            {% for product in products %}
+                <tr>
+                    <td class="fw-bold">{{ product.id }}</td>
+                    <td>{{ product.region }}</td>
+                    <td class="fw-semibold">{{ product.name }}</td>
+                    <td>{{ product.description|slice(0, 50) }}...</td>
+                    <td>{{ product.createdAt ? product.createdAt|date('d/m/Y H:i') : 'Not defined' }}</td>
+                    <td>{{ product.stock }}</td>
+                    <td><span class="badge bg-primary">{{ product.price }} €</span></td>
+                    <td>
+                        <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-primary btn-sm me-2">
+                            View
+                        </a>
+                        <a href="{{ path('app_product_edit', {'id': product.id}) }}" class="btn btn-warning btn-sm">
+                            Edit
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8" class="text-center text-muted">No products found.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{{ path('app_product_index') }}" class="btn btn-outline-secondary fw-semibold">
+            Back to list
+        </a>
+    </div>
+</div>
+{% endblock %}
