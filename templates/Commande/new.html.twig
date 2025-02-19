@@ -1,16 +1,17 @@
 {# templates/commande/new.html.twig #}
-
 {% extends 'base.html.twig' %}
 
-{% block title %}Create Commande{% endblock %}
+{% block title %}New Order{% endblock %}
 
 {% block body %}
-    <h1>Create Commande</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Order {{ product.name }}</h1>
 
-    {{ form_start(form) }}
-        {{ form_widget(form) }}  {# Render all form fields (easier than form_row) #}
-        <button type="submit" class="btn btn-success">Create</button>
-    {{ form_end(form) }}
-
-    <a href="{{ path('commande_index') }}" class="btn btn-secondary">Back to list</a>
+    <form method="post" action="{{ path('app_commande_new', {'id': product.id}) }}">
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit" class="btn btn-primary">Place Order</button>
+        {{ form_end(form) }}
+    </form>
+</div>
 {% endblock %}

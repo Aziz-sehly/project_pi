@@ -1,17 +1,30 @@
 {# templates/commande/edit.html.twig #}
 
-{% extends 'base.html.twig' %}
+<form method="post" action="{{ path('app_commande_edit', {'id': commande.id}) }}">
+    {{ form_start(form) }}
+    
+    <div class="form-group">
+        {{ form_label(form.product) }}
+        {{ form_widget(form.product) }}
+    </div>
 
-{% block title %}Edit Commande{% endblock %}
+    <div class="form-group">
+        {{ form_label(form.quantity) }}
+        {{ form_widget(form.quantity) }}
+    </div>
 
-{% block body %}
-    <h1>Edit Commande</h1>
+    <div class="form-group">
+        <button type="submit">Save Changes</button>
+    </div>
 
-    {{ form_start(edit_form) }}
-        {{ form_widget(edit_form) }}  {# This renders all the form fields.  You could use form_row() for more control. #}
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-    {{ form_end(edit_form) }}
+    {{ form_end(form) }}
+</form>
 
-    <a href="{{ path('commande_index') }}" class="btn btn-secondary">Back to list</a>
-    {{ include('commande/_delete_form.html.twig') }} {# Include the delete form #}
-{% endblock %}
+{# Check if the order has been cancelled already or not, and display cancel button if it is not cancelled yet #}
+{% if commande.cancellationDate is null %}
+    <form method="post" action="{{ path('app_commande_cancel', {'id': commande.id}) }}">
+        <button type="submit" class="btn btn-warning" onclick="return confirm('Are you sure you want to cancel this order?')">Cancel Order</button>
+    </form>
+{% else %}
+    <p>Order has been cancelled on: {{ commande.cancellationDate|date('Y-m-d H:i:s') }}</p>
+{% endif %}

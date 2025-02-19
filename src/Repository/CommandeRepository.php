@@ -21,36 +21,28 @@ class CommandeRepository extends ServiceEntityRepository
         parent::__construct($registry, Commande::class);
     }
 
-    // Add custom query methods here if needed. For example:
+    // Example of a custom query to find orders by product
+    public function findByProduct($productId)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.product = :productId')
+            ->setParameter('productId', $productId)
+            ->orderBy('c.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 
-    // /**
-    //  * @return Commande[] Returns an array of Commande objects
-    //  */
-    // public function findByUserName($userName): array
-    // {
-    //     return $this->createQueryBuilder('c')
-    //         ->andWhere('c.utilisateur = :userName') // Assuming "utilisateur" is the user's name field
-    //         ->setParameter('userName', $userName)
-    //         ->orderBy('c.id', 'ASC')
-    //         ->getQuery()
-    //         ->getResult()
-    //     ;
-    // }
+    // Example of a custom query to find all orders within a price range
+    public function findOrdersByPriceRange($minPrice, $maxPrice)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.price BETWEEN :minPrice AND :maxPrice')
+            ->setParameter('minPrice', $minPrice)
+            ->setParameter('maxPrice', $maxPrice)
+            ->getQuery()
+            ->getResult();
+    }
 
-    // /**
-    //  * @return Commande|null
-    //  */
-    // public function findOneByUserNameAndProductName($userName, $productName): ?Commande
-    // {
-    //     return $this->createQueryBuilder('c')
-    //         ->andWhere('c.utilisateur = :userName')
-    //         ->andWhere('c.nomProduit = :productName')
-    //         ->setParameters([
-    //             'userName' => $userName,
-    //             'productName' => $productName,
-    //         ])
-    //         ->getQuery()
-    //         ->getOneOrNullResult()
-    //     ;
-    // }
+    // Additional useful methods can be added here, such as:
+    // - find orders by customer, status, date range, etc.
 }

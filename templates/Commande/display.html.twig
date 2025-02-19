@@ -1,0 +1,75 @@
+{% extends 'front.html.twig' %}
+
+{% block title %}Our Commandes{% endblock %}
+
+{% block body %}
+<div class="container mt-5 p-4 shadow-lg rounded" style="background-color: white;">
+    <h1 class="text-center text-dark fw-bold">Commande List</h1>
+
+    <!-- Horizontal scrolling container -->
+    <div class="commandes-carousel-wrapper">
+        <div class="d-flex flex-nowrap pb-3" style="gap: 2rem; padding-left: 1rem; min-height: 250px;">
+            {% for commande in commandes %}
+                <div class="col-auto">
+                    <div class="single-list-topics-content card shadow-sm" style="min-width: 300px; flex-shrink: 0;">
+                        <!-- Commande Image (if applicable) -->
+                        <img src="{{ asset('assets/images/blog/b1.jpg') }}" class="card-img-top" alt="Commande Image" style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title text-dark fw-bold">{{ commande.nom }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ commande.region }}</h6>
+                            <p class="card-text">{{ commande.description|slice(0, 100) }}...</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-primary">{{ commande.prix }} €</span>
+                                <small class="text-muted">{{ commande.date ? commande.date|date('d/m/Y H:i') : 'Not defined' }}</small>
+                            </div>
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{{ path('app_purchase_new', {'id': commande.id}) }}" class="btn btn-orange btn-sm">
+                                Purchase
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12 text-center text-muted">
+                    <p>No commandes found.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .commandes-carousel-wrapper {
+        overflow-x: auto;
+        padding-bottom: 1rem;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .commandes-carousel-wrapper::-webkit-scrollbar {
+        display: none;
+    }
+
+    .d-flex {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: nowrap;
+        padding-right: 1rem;
+    }
+
+    .col-auto {
+        flex-shrink: 0;
+    }
+
+    .btn-orange {
+        background-color: #ff7f32;
+        border-color: #ff7f32;
+    }
+
+    .btn-orange:hover {
+        background-color: #ff6a1f;
+        border-color: #ff6a1f;
+    }
+</style>
+{% endblock %}

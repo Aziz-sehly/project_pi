@@ -1,78 +1,83 @@
 <?php
 
+// src/Controller/CommandeController.php
+
 namespace App\Controller;
 
-use App\Entity\Product;
 use App\Entity\Commande;
+use App\Entity\Product;
 use App\Form\CommandeType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\CommandeRepository;
+use App\Repository\ProductRepository;
+use Doctrine\ORM\EntityManagerInterface; // Add this for entity manager
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
 
 class CommandeController extends AbstractController
 {
-    #[Route('/commandes', name: 'app_commande_index')]
-    public function index(ManagerRegistry $doctrine): Response
-    {
-        $commandes = $doctrine->getRepository(Commande::class)->findAll();
+    private EntityManagerInterface $entityManager; // Declare the entity manager
 
+    // Inject the entity manager in the controller's constructor
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    #[Route('/commande', name: 'app_commande_index')]
+    public function index(CommandeRepository $commandeRepository): Response
+    {
         return $this->render('commande/index.html.twig', [
-            'commandes' => $commandes,
+            'commandes' => $commandeRepository->findAll(),
         ]);
     }
 
-    #[Route('/commande/new', name: 'app_commande_new')]
-    public function new(Request $request, ManagerRegistry $doctrine): Response
+    #[Route('/commande/new/{id}', name: 'app_commande_new')]
+    public function new(Request $request, Product $product): Response
     {
         $commande = new Commande();
+        $commande->setProduct($product);
         $form = $this->createForm(CommandeType::class, $commande);
-
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $doctrine->getManager();
-            $entityManager->persist($commande);
-            $entityManager->flush();
 
-            return $this->redirectToRoute('app_commande_show', ['id' => $commande->getId()]);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $commande->setOrderDate(new \DateTime());
+
+            // Use the injected entity manager to persist and flush
+            $this->entityManager->persist($commande);
+            $this->entityManager->flush();
+
+            return $this->redirectToRoute('app_commande_index');
         }
 
         return $this->render('commande/new.html.twig', [
             'form' => $form->createView(),
+            'product' => $product,
         ]);
     }
 
-    #[Route('/commande/{id}', name: 'app_commande_show', requirements: ['id' => '\d+'])]
-    public function show(int $id, ManagerRegistry $doctrine): Response
+    #[Route('/shop', name: 'app_shop_index')]
+    public function shop(ProductRepository $productRepository): Response
     {
-        $commande = $doctrine->getRepository(Commande::class)->find($id);
+        $products = $productRepository->findAll(); // Fetch all products from the database
 
-        if (!$commande) {
-            throw $this->createNotFoundException('No commande found for id ' . $id);
-        }
-
-        return $this->render('commande/show.html.twig', [
-            'commande' => $commande,
+        return $this->render('commande/shop.html.twig', [
+            'products' => $products,
         ]);
     }
 
-    #[Route('/commande/edit/{id}', name: 'app_commande_edit', requirements: ['id' => '\d+'])]
-    public function edit(int $id, Request $request, ManagerRegistry $doctrine): Response
+    #[Route('/commande/edit/{id}', name: 'app_commande_edit')]
+    public function edit(Request $request, Commande $commande): Response
     {
-        $commande = $doctrine->getRepository(Commande::class)->find($id);
-
-        if (!$commande) {
-            throw $this->createNotFoundException('No commande found for id ' . $id);
-        }
-
         $form = $this->createForm(CommandeType::class, $commande);
-
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $doctrine->getManager()->flush();
 
-            return $this->redirectToRoute('app_commande_show', ['id' => $commande->getId()]);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Use the injected entity manager to flush changes
+            $this->entityManager->flush();
+
+            return $this->redirectToRoute('app_commande_index');
         }
 
         return $this->render('commande/edit.html.twig', [
@@ -81,58 +86,16 @@ class CommandeController extends AbstractController
         ]);
     }
 
-    #[Route('/commande/delete/{id}', name: 'app_commande_delete', requirements: ['id' => '\d+'])]
-    public function delete(int $id, ManagerRegistry $doctrine): Response
+    #[Route('/commande/cancel/{id}', name: 'app_commande_cancel')]
+    public function cancel(Commande $commande): Response
     {
-        $commande = $doctrine->getRepository(Commande::class)->find($id);
+        // Set cancellation date
+        $commande->setCancellationDate(new \DateTime());
 
-        if (!$commande) {
-            throw $this->createNotFoundException('No commande found for id ' . $id);
-        }
-
-        $entityManager = $doctrine->getManager();
-        $entityManager->remove($commande);
-        $entityManager->flush();
+        // Flush the changes
+        $this->entityManager->flush();
 
         return $this->redirectToRoute('app_commande_index');
     }
 
-    #[Route('/commande/add/{productId}/{quantity}', name: 'app_commande_add')]
-    public function add(int $productId, int $quantity, ManagerRegistry $doctrine): Response
-    {
-        $session = $this->get('session');
-        $cart = $session->get('cart', []);
-        $product = $doctrine->getRepository(Product::class)->find($productId);
-
-        if (!$product) {
-            throw $this->createNotFoundException('Product not found');
-        }
-
-        $cart[$productId] = [
-            'product' => $product,
-            'quantity' => $quantity,
-        ];
-
-        $session->set('cart', $cart);
-
-        return $this->redirectToRoute('app_commande_new');
-    }
-
-    private function getProducts()
-    {
-        return [
-            [
-                'id' => 1,
-                'name' => 'Product 1',
-                'description' => 'Description for Product 1',
-                'price' => 10.00,
-            ],
-            [
-                'id' => 2,
-                'name' => 'Product 2',
-                'description' => 'Description for Product 2',
-                'price' => 20.00,
-            ],
-        ];
-    }
 }
