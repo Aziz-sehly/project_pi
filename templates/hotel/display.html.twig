@@ -1,166 +1,5 @@
-{% extends 'front.html.twig' %}
 
 {% block title %}Liste des Hôtels{% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    <style>
-        /* Global styles */
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f0f2f5;
-            color: #333;
-        }
-        /* Section header styles */
-        .section-header {
-            text-align: center;
-            padding: 20px 0;
-        }
-        .section-header h2 {
-            font-size: 2rem;
-            font-weight: 700;
-        }
-        .section-header p {
-            font-size: 1.1rem;
-            color: #666;
-        }
-        /* Detailed hotel card design (using the explore layout) */
-        .explore-content .row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-        }
-        .single-explore-item {
-            background: #fff;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
-            width: 100%;
-            max-width: 350px;
-        }
-        .single-explore-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-        .single-explore-img {
-            position: relative;
-        }
-        .single-explore-img img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-        .single-explore-img-info {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-        }
-        .single-explore-img-info button {
-            background: #007bff;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .single-explore-image-icon-box {
-            margin-top: 5px;
-        }
-        .single-explore-image-icon-box ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            gap: 5px;
-        }
-        .single-explore-image-icon {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 5px;
-            border-radius: 50%;
-            color: #fff;
-            font-size: 0.9rem;
-        }
-        .single-explore-txt {
-            padding: 15px;
-        }
-        .single-explore-txt h2 {
-            font-size: 1.3rem;
-            margin: 0 0 10px;
-        }
-        .single-explore-txt h2 a {
-            color: #333;
-            text-decoration: none;
-        }
-        .explore-rating-price {
-            font-size: 0.9rem;
-            margin: 10px 0;
-        }
-        .explore-rating-price span,
-        .explore-rating-price a {
-            margin-right: 5px;
-        }
-        .explore-price-box {
-            font-weight: bold;
-            color: #007bff;
-        }
-        .explore-person {
-            margin: 15px 0;
-        }
-        .explore-person-img img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-        }
-        .explore-person p {
-            font-size: 0.85rem;
-            margin: 0;
-            color: #555;
-        }
-        .explore-open-close-part {
-            margin-top: 10px;
-        }
-        .explore-open-close-part .open-btn {
-            background: #28a745;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .explore-map-icon a {
-            margin-left: 5px;
-            color: #007bff;
-            text-decoration: none;
-        }
-        /* Booking link styling */
-        .explore-booking {
-            text-align: center;
-            margin-top: 10px;
-        }
-        .explore-booking a {
-            background: #007bff;
-            color: #fff;
-            padding: 8px 12px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: background 0.2s;
-        }
-        .explore-booking a:hover {
-            background: #0056b3;
-        }
-        /* Price styling */
-        .explore-price-line {
-            font-size: 1rem;
-            margin: 10px 0;
-            color: #333;
-            font-weight: 600;
-        }
-    </style>
-{% endblock %}
-
 {% block body %}
     <div class="section-header">
         <h2>Liste des Hôtels</h2>
@@ -265,3 +104,162 @@
         </div>
     </div>
 {% endblock %}
+{% block stylesheets %}
+    <style>
+        /* Global styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        /* Section header styles */
+        .section-header {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .section-header p {
+            font-size: 1.1rem;
+            color: #666;
+        }
+        /* Detailed hotel card design (using the explore layout) */
+        .explore-content .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .single-explore-item {
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            max-width: 350px;
+        }
+        .single-explore-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        .single-explore-img {
+            position: relative;
+        }
+        .single-explore-img img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .single-explore-img-info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        .single-explore-img-info button {
+            background: #ff5733;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .single-explore-image-icon-box {
+            margin-top: 5px;
+        }
+        .single-explore-image-icon-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 5px;
+        }
+        .single-explore-image-icon {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+        .single-explore-txt {
+            padding: 15px;
+        }
+        .single-explore-txt h2 {
+            font-size: 1.3rem;
+            margin: 0 0 10px;
+        }
+        .single-explore-txt h2 a {
+            color: #333;
+            text-decoration: none;
+        }
+        .explore-rating-price {
+            font-size: 0.9rem;
+            margin: 10px 0;
+        }
+        .explore-rating-price span,
+        .explore-rating-price a {
+            margin-right: 5px;
+        }
+        .explore-price-box {
+            font-weight: bold;
+            color: #ff5733;
+        }
+        .explore-person {
+            margin: 15px 0;
+        }
+        .explore-person-img img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        .explore-person p {
+            font-size: 0.85rem;
+            margin: 0;
+            color: #555;
+        }
+        .explore-open-close-part {
+            margin-top: 10px;
+        }
+        .explore-open-close-part .open-btn {
+            background: #28a745;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .explore-map-icon a {
+            margin-left: 5px;
+            color: #ff5733;
+            text-decoration: none;
+        }
+        /* Booking link styling */
+        .explore-booking {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .explore-booking a {
+            background: #ff5733;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .explore-booking a:hover {
+            background: #ff5733;
+        }
+        /* Price styling */
+        .explore-price-line {
+            font-size: 1rem;
+            margin: 10px 0;
+            color: #333;
+            font-weight: 600;
+        }
+    </style>
+{% endblock %}
+
+

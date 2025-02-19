@@ -1,0 +1,53 @@
+{% extends 'back.html.twig' %}
+
+{% block title %}Participation{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <!-- Card containing the table -->
+    <div class="card p-4 shadow-lg rounded-4 border-0" style="background-color: #f9f9f9; max-width: 800px; margin: auto;">
+        <h1 class="text-center text-primary fw-bold mb-4">Détails de la Participation</h1>
+
+        <!-- Table inside a white card -->
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-bordered shadow-sm">
+                <tbody>
+                    <tr>
+                        <th class="fw-bold">Id</th>
+                        <td>{{ participation.id }}</td>
+                    </tr>
+                    <tr>
+                        <th class="fw-bold">Utilisateur</th>
+                        <td>{{ participation.utilisateur }}</td>
+                    </tr>
+                    <tr>
+                        <th class="fw-bold">Nombre de places</th>
+                        <td>{{ participation.nombrePlaces }}</td>
+                    </tr>
+                     <tr>
+                         <th class="fw-bold">Région de l'événement</th>
+                        <td>{{ participation.evenement.region }}</td>
+                    </tr>
+                     <tr>
+                         <th class="fw-bold">Nom de l'événement</th>
+                        <td>{{ participation.evenement.Nom }}</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Action buttons section -->
+        <div class="d-flex justify-content-between mt-4">
+            <!-- Back to List Button -->
+            <a href="{{ path('app_participation_index') }}" class="btn btn-outline-primary fw-semibold d-flex align-items-center">
+                <i class="bi bi-arrow-left-circle-fill me-2"></i> Retour à la liste
+            </a>
+
+    
+
+         
+        </div>
+    </div>
+</div>
+{% endblock %}

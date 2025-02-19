@@ -1,0 +1,106 @@
+{% block evenement %}
+<div class="container mt-5 p-4 shadow-lg rounded bg-white">
+    <h1 class="text-center text-dark fw-bold">Liste des Événements</h1>
+
+    <!-- Horizontal scrolling container -->
+    <div class="events-carousel-wrapper">
+        <div class="d-flex flex-nowrap pb-3">
+            {% for evenement in evenements %}
+                <div class="col-auto">
+                    <div class="card event-card shadow-sm">
+                        <!-- Event Image -->
+                        <img src="{{ asset('assets/images/blog/ev1.PNG') }}" class="card-img-top" alt="Image de l'événement">
+                        
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold text-primary">
+                                {{ evenement.nom }}
+                            </h5>
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                <i class="fas fa-map-marker-alt"></i> {{ evenement.region }}
+                            </h6>
+                            <p class="card-text">
+                                {{ evenement.description|slice(0, 80) }}...
+                            </p>
+                            <div class="event-details">
+                                <span class="badge bg-primary">
+                                    <i class="fas fa-euro-sign"></i> {{ evenement.prix }} €
+                                </span>
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar-alt"></i> 
+                                    {{ evenement.date ? evenement.date|date('d/m/Y H:i') : 'Non défini' }}
+                                </small>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer text-center">
+                            <a href="{{ path('app_participation_new', {'id': evenement.id}) }}" class="btn btn-orange">
+                                <i class="fas fa-ticket-alt"></i> Réserver
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12 text-center text-muted">
+                    <p>Aucun événement trouvé.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .events-carousel-wrapper {
+        overflow-x: auto;
+        padding-bottom: 1rem;
+        scrollbar-width: none;
+    }
+    .events-carousel-wrapper::-webkit-scrollbar {
+        display: none;
+    }
+
+    .d-flex {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: nowrap;
+    }
+
+    .event-card {
+        min-width: 250px; /* Réduit la largeur des cartes */
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease; /* Transition pour le changement de couleur */
+    }
+
+    .event-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15);
+        background-color: #f0f0f0; /* Changement de couleur de fond au survol */
+    }
+
+    .card-img-top {
+        height: 150px; /* Réduit la hauteur de l'image */
+        object-fit: cover;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+    }
+
+    .event-details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    .btn-orange {
+        background-color: #ff7f32;
+        border-color: #ff7f32;
+        font-weight: bold;
+        border-radius: 8px;
+    }
+
+    .btn-orange:hover {
+        background-color: #ff6a1f;
+        border-color: #ff6a1f;
+    }
+</style>
+{% endblock %}
