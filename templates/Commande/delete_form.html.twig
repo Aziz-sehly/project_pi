@@ -1,0 +1,16 @@
+{# templates/commande/delete.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Delete Commande{% endblock %}
+
+{% block body %}
+    <h1>Delete Commande</h1>
+
+    <p>Are you sure you want to delete this commande?</p>
+
+    {{ form_start(delete_form) }}
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="{{ path('commande_index') }}" class="btn btn-secondary">Cancel</a>
+    {{ form_end(delete_form) }}
+{% endblock %}

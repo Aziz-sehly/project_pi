@@ -1,0 +1,39 @@
+{# templates/commande/show.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Show Commande{% endblock %}
+
+{% block body %}
+    <h1>Show Commande</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Client</th>
+                <th>Order Date</th>
+                <th>Total</th>
+                <th>Order Items</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ commande.id }}</td>
+                <td>{{ commande.client ? commande.client.name : '' }}</td> {# Display client name, handle null #}
+                <td>{{ commande.orderDate ? commande.orderDate|date('Y-m-d H:i:s') : '' }}</td> {# Format date #}
+                <td>{{ commande.total }}</td>
+                <td>
+                    {% for orderItem in commande.orderItems %}
+                        {{ orderItem.product.name }} ({{ orderItem.quantity }})
+                    {% else %}
+                        no items
+                    {% endfor %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('commande_edit', {'id': commande.id}) }}" class="btn btn-primary">Edit</a>
+    <a href="{{ path('commande_delete', {'id': commande.id}) }}" class="btn btn-danger">Delete</a>
+{% endblock %}
