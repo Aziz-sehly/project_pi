@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+
+
 #[Route('/evenement')]
 final class EvenementController extends AbstractController
 {
@@ -88,6 +90,5 @@ final class EvenementController extends AbstractController
             'evenements' => $evenements,
         ]);
     }
-
-
+   
 }
