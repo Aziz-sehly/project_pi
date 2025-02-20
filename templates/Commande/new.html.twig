@@ -4,14 +4,52 @@
 {% block title %}New Order{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    <h1 class="text-center mb-4">Order {{ product.name }}</h1>
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-lg p-5" style="max-width: 600px; width: 100%; border-radius: 10px;">
+        <h2 class="text-center mb-4 text-primary fw-bold">Order {{ product.name }}</h2>
 
-    <form method="post" action="{{ path('app_commande_new', {'id': product.id}) }}">
-        {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <button type="submit" class="btn btn-primary">Place Order</button>
+        {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
+        {{ form_errors(form) }}
+
+         {# Product Selection (If needed) #}
+         {% if form.product is defined %}
+         <div class="mb-3">
+             {{ form_label(form.product, 'Product', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+             <div class="invalid-feedback d-block">
+                 {{ form_errors(form.product) }}
+             </div>
+             {{ form_widget(form.product, {'attr': {'class': 'form-select'}}) }}
+         </div>
+         {% endif %}
+
+        {# Quantity Field #}
+        <div class="mb-3">
+            {{ form_label(form.quantity, 'Quantity *', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+            <div class="invalid-feedback d-block">
+                {{ form_errors(form.quantity) }}
+            </div>
+            {{ form_widget(form.quantity, {
+                'attr': {
+                    'class': 'form-control' ~ (form.quantity.vars.valid ? '' : ' is-invalid'),
+                    'min': 1
+                }
+            }) }}
+        </div>
+
+    
+
+        {# Buttons Section #}
+        <div class="d-flex justify-content-between gap-3">
+            <a href="{{ path('app_shop_index') }}" class="btn btn-outline-secondary flex-grow-1">
+                <i class="fas fa-arrow-left me-2"></i>Back to Products
+            </a>
+            <button type="submit" class="btn btn-primary flex-grow-1">
+            </button>
+        </div>
+
         {{ form_end(form) }}
-    </form>
+    </div>
 </div>
 {% endblock %}
+
+

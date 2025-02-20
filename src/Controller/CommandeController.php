@@ -1,7 +1,5 @@
 <?php
 
-// src/Controller/CommandeController.php
-
 namespace App\Controller;
 
 use App\Entity\Commande;
@@ -9,7 +7,7 @@ use App\Entity\Product;
 use App\Form\CommandeType;
 use App\Repository\CommandeRepository;
 use App\Repository\ProductRepository;
-use Doctrine\ORM\EntityManagerInterface; // Add this for entity manager
+use Doctrine\ORM\EntityManagerInterface; 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,9 +15,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CommandeController extends AbstractController
 {
-    private EntityManagerInterface $entityManager; // Declare the entity manager
+    private EntityManagerInterface $entityManager;
 
-    // Inject the entity manager in the controller's constructor
+    
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -44,7 +42,7 @@ class CommandeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $commande->setOrderDate(new \DateTime());
 
-            // Use the injected entity manager to persist and flush
+            
             $this->entityManager->persist($commande);
             $this->entityManager->flush();
 
@@ -60,8 +58,7 @@ class CommandeController extends AbstractController
     #[Route('/shop', name: 'app_shop_index')]
     public function shop(ProductRepository $productRepository): Response
     {
-        $products = $productRepository->findAll(); // Fetch all products from the database
-
+        $products = $productRepository->findAll(); 
         return $this->render('commande/shop.html.twig', [
             'products' => $products,
         ]);
@@ -74,7 +71,7 @@ class CommandeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Use the injected entity manager to flush changes
+            
             $this->entityManager->flush();
 
             return $this->redirectToRoute('app_commande_index');
@@ -89,10 +86,10 @@ class CommandeController extends AbstractController
     #[Route('/commande/cancel/{id}', name: 'app_commande_cancel')]
     public function cancel(Commande $commande): Response
     {
-        // Set cancellation date
+        
         $commande->setCancellationDate(new \DateTime());
 
-        // Flush the changes
+        
         $this->entityManager->flush();
 
         return $this->redirectToRoute('app_commande_index');

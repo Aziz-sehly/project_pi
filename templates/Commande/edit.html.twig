@@ -1,30 +1,53 @@
-{# templates/commande/edit.html.twig #}
+{% extends 'base.html.twig' %}
 
-<form method="post" action="{{ path('app_commande_edit', {'id': commande.id}) }}">
-    {{ form_start(form) }}
-    
-    <div class="form-group">
-        {{ form_label(form.product) }}
-        {{ form_widget(form.product) }}
+{% block title %}Edit Order{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4 rounded-4 border-0" style="background-color: white; max-width: 700px; margin: auto;">
+        <h1 class="text-center text-primary fw-bold mb-4">Edit Order</h1>
+
+        <div class="p-3 shadow-sm rounded bg-light">
+            <form method="post" action="{{ path('app_commande_edit', {'id': commande.id}) }}">
+                {{ form_start(form) }}
+
+                <div class="mb-3">
+                    {{ form_label(form.product, null, {'label_attr': {'class': 'fw-semibold'}}) }}
+                    {{ form_widget(form.product, {'attr': {'class': 'form-control'}}) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(form.quantity, null, {'label_attr': {'class': 'fw-semibold'}}) }}
+                    {{ form_widget(form.quantity, {'attr': {'class': 'form-control'}}) }}
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{{ path('app_commande_index') }}" class="btn btn-outline-secondary fw-semibold">
+                        <i class="bi bi-arrow-left"></i> Back to Orders
+                    </a>
+                    <button type="submit" class="btn btn-success fw-semibold">
+                        <i class="bi bi-check-circle"></i> Save Changes
+                    </button>
+                </div>
+
+                {{ form_end(form) }}
+            </form>
+        </div>
+
+        {% if commande.cancellationDate is null %}
+            <div class="text-center mt-3">
+                <form method="post" action="{{ path('app_commande_cancel', {'id': commande.id}) }}">
+                    <button type="submit" class="btn btn-warning fw-semibold" onclick="return confirm('Are you sure you want to cancel this order?')">
+                        <i class="bi bi-x-circle"></i> Cancel Order
+                    </button>
+                </form>
+            </div>
+        {% else %}
+            <p class="text-center text-danger mt-3 fw-bold">
+                Order was canceled on: {{ commande.cancellationDate|date('Y-m-d H:i:s') }}
+            </p>
+        {% endif %}
     </div>
+</div>
+{% endblock %}
 
-    <div class="form-group">
-        {{ form_label(form.quantity) }}
-        {{ form_widget(form.quantity) }}
-    </div>
-
-    <div class="form-group">
-        <button type="submit">Save Changes</button>
-    </div>
-
-    {{ form_end(form) }}
-</form>
-
-{# Check if the order has been cancelled already or not, and display cancel button if it is not cancelled yet #}
-{% if commande.cancellationDate is null %}
-    <form method="post" action="{{ path('app_commande_cancel', {'id': commande.id}) }}">
-        <button type="submit" class="btn btn-warning" onclick="return confirm('Are you sure you want to cancel this order?')">Cancel Order</button>
-    </form>
-{% else %}
-    <p>Order has been cancelled on: {{ commande.cancellationDate|date('Y-m-d H:i:s') }}</p>
-{% endif %}

@@ -33,9 +33,9 @@ final class ProductController extends AbstractController
             $entityManager->persist($product);
             $entityManager->flush();
     
-            $this->addFlash('success', 'Product created successfully!'); // Add a flash message
+            $this->addFlash('success', 'Product created successfully!'); 
     
-            return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER); // Redirect to the product index
+            return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
         }
     
         return $this->render('product/new.html.twig', [
