@@ -1,0 +1,148 @@
+{% extends 'back.html.twig' %}
+
+{% block title %}Edit Region{% endblock %}
+
+{% block body %}
+    <div class="page-container">
+        <div class="form-container">
+            <div class="form-header">
+                <h1 class="form-title">Edit Region</h1>
+                <a href="{{ path('app_region_index') }}" class="back-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Back to List
+                </a>
+            </div>
+
+            <div class="form-content">
+                {{ include('region/_form.html.twig', {'button_label': 'Update'}) }}
+            </div>
+
+            <div class="danger-zone">
+                <h3 class="danger-zone-title">Danger Zone</h3>
+                <div class="danger-zone-content">
+                    {{ include('region/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Danger zone styling */
+        .danger-zone {
+            margin: 2rem;
+            padding: 1.5rem;
+            border: 1px solid #fee2e2;
+            border-radius: 8px;
+            background: #fef2f2;
+        }
+
+        .danger-zone-title {
+            color: #dc2626;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Reuse existing styles from new.html.twig */
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #4b5563;
+            --background-color: #f8fafc;
+            --border-color: #e2e8f0;
+            --hover-color: #1d4ed8;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--background-color);
+            color: #1e293b;
+            line-height: 1.5;
+        }
+
+        .page-container {
+            width: 100%;
+            max-width: 800px;
+            padding: 2rem 1rem;
+            margin: 0 auto;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .form-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--primary-color);
+        }
+
+        .form-content {
+            padding: 0 2rem 2rem;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding-top: 1.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .btn.primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn.danger {
+            background-color: #dc2626;
+            color: white;
+        }
+
+        @media (max-width: 640px) {
+            .form-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .danger-zone {
+                margin: 1rem;
+            }
+        }
+    </style>
+{% endblock %}

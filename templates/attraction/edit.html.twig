@@ -1,0 +1,171 @@
+{% extends 'back.html.twig' %}
+
+{% block title %}Edit Attraction{% endblock %}
+
+{% block body %}
+    <div class="page-container">
+        <div class="form-container">
+            <div class="form-header">
+                <h1 class="form-title">Edit Attraction</h1>
+                <a href="{{ path('app_attraction_index') }}" class="back-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    Back to List
+                </a>
+            </div>
+
+            {{ form_start(form) }}
+
+            <div class="form-group">
+                <label class="form-label">{{ form_label(form.nom) }}</label>
+                {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">{{ form_label(form.type) }}</label>
+                {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">{{ form_label(form.description) }}</label>
+                {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">{{ form_label(form.region) }}</label>
+                {{ form_widget(form.region, {'attr': {'class': 'form-select'}}) }}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-save">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4l2-2h4l2 2h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2z"></path>
+                        <polyline points="17 13 12 18 7 13"></polyline>
+                    </svg>
+                    Update
+                </button>
+                {{ form_end(form) }}
+            </div>
+
+            <div class="form-actions">
+                {{ include('attraction/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #4b5563;
+            --background-color: #f8fafc;
+            --border-color: #e2e8f0;
+            --hover-color: #1d4ed8;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--background-color);
+            color: #1e293b;
+            line-height: 1.5;
+        }
+
+        .page-container {
+            width: 100%;
+            max-width: 800px;
+            padding: 2rem 1rem;
+            margin: 0 auto;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 2rem;
+        }
+
+        .form-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #4b5563;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            display: block;
+        }
+
+        .form-control, .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding-top: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .btn.primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn.primary:hover {
+            background-color: var(--hover-color);
+        }
+    </style>
+{% endblock %}
