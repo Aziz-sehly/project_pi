@@ -60,6 +60,10 @@ class Hotel
     #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'id_hotel')]
     private Collection $bookings;
 
+    #[ORM\Column(length: 255, nullable: false, options: ["default" => ""])]
+    private ?string $images = '';
+
+
     public function __construct()
     {
         $this->bookings = new ArrayCollection();
@@ -141,5 +145,17 @@ class Hotel
     public function getBookings(): Collection
     {
         return $this->bookings;
+    }
+
+    public function getImages(): ?string
+    {
+        return $this->images;
+    }
+
+    public function setImages(?string $images): static
+    {
+        $this->images = $images;
+
+        return $this;
     }
 }

@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Knp\Component\Pager\PaginatorInterface;
+use App\Entity\Booking;
 
 #[Route('/hotel')]
 final class HotelController extends AbstractController
@@ -40,17 +41,42 @@ final class HotelController extends AbstractController
         $hotel = new Hotel();
         $form = $this->createForm(HotelType::class, $hotel);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
+            // Handle file upload
+            $ImagesFile = $form->get('Images')->getData(); // Get the file from the form
+    
+            if ($ImagesFile) {
+                try {
+                    // Generate a unique filename
+                    $newFilename = uniqid() . '.' . $ImagesFile->guessExtension();
+    
+                    // Specify the directory where the file will be saved
+                    $uploadDirectory = $this->getParameter('hotel_Images_directory');
+                    
+                    // Move the uploaded file to the specified directory
+                    $ImagesFile->move($uploadDirectory, $newFilename);
+                    
+                    // Save the file name in the hotel entity
+                    $hotel->setImages($newFilename);
+                } catch (FileException $e) {
+                    // Handle any exceptions (e.g., file is too large, invalid format, etc.)
+                    // You could log the error or show a message to the user
+                }
+            }
+    
+            // Persist hotel data
             $entityManager->persist($hotel);
             $entityManager->flush();
-
+    
+            // Redirect to hotel index page after successful form submission
             return $this->redirectToRoute('app_hotel_index', [], Response::HTTP_SEE_OTHER);
         }
-
+    
+        // Render form if it's not submitted or invalid
         return $this->render('hotel/new.html.twig', [
             'hotel' => $hotel,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -84,6 +110,15 @@ final class HotelController extends AbstractController
     public function delete(Request $request, Hotel $hotel, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $hotel->getId(), $request->request->get('_token'))) {
+            // Fetch all bookings related to this hotel using 'id_hotel'
+            $bookings = $entityManager->getRepository(Booking::class)->findBy(['id_hotel' => $hotel]);
+
+            // Remove all bookings associated with the hotel
+            foreach ($bookings as $booking) {
+                $entityManager->remove($booking);
+            }
+
+            // Now delete the hotel
             $entityManager->remove($hotel);
             $entityManager->flush();
         }

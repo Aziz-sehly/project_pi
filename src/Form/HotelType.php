@@ -9,6 +9,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+
 
 class HotelType extends AbstractType
 {
@@ -36,6 +39,19 @@ class HotelType extends AbstractType
                 'attr' => ['class' => 'form-control'],
                 'label' => 'Email de contact'
             ])
+            ->add('Images', FileType::class, [
+                'label' => 'Hotel Images (JPG/PNG)',
+                'mapped' => false,  // This ensures the file is not directly mapped to the entity property
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '1024k',
+                        'mimeTypes' => ['image/jpeg', 'image/png'],
+                        'mimeTypesMessage' => 'Please upload a valid JPG or PNG image',
+                    ])
+                ],
+            ])
+            
             ->add('phone', TextType::class, [
                 'attr' => [
                     'class' => 'form-control',

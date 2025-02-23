@@ -55,7 +55,7 @@ class Booking
     #[Assert\NotBlank(message: "La demande spéciale est obligatoire.")]
     #[Assert\Length(max: 255, maxMessage: "La demande spéciale ne peut pas dépasser 255 caractères.")]
     private ?string $special_request = null;
-
+    
     // Getters and setters...
     public function getId(): ?int { return $this->id; }
 
@@ -106,4 +106,5 @@ class Booking
         $this->special_request = $special_request;
         return $this;
     }
+
 }
