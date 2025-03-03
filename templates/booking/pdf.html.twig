@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Réservation #{{ booking.id }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: #2A2E45; margin-bottom: 5px; }
+        .details { margin: 20px 0; }
+        .section { margin-bottom: 25px; }
+        .badge {
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        .confirmed { background: #E8F5E9; color: #2E7D32; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Réservation #{{ booking.id }}</h1>
+        <p>Hôtel {{ booking.idHotel.nom ?? 'Non spécifié' }}</p>
+    </div>
+
+    <div class="details">
+        <div class="section">
+            <h3>Informations client</h3>
+            <p>{{ booking.utilisateur }}</p>
+            <p>Demande spéciale : {{ booking.specialRequest|default('Aucune') }}</p>
+        </div>
+
+        <div class="section">
+            <h3>Détails du séjour</h3>
+            <table>
+                <tr>
+                    <th>Date d'arrivée</th>
+                    <th>Date de départ</th>
+                    <th>Nombre de personnes</th>
+                </tr>
+                <tr>
+                    <td>{{ booking.checkIn|date('d/m/Y') }}</td>
+                    <td>{{ booking.checkOut|date('d/m/Y') }}</td>
+                    <td>{{ booking.numberOfGuest }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h3>Statut</h3>
+            <span class="badge confirmed">{{ booking.payementMethod }} - Confirmée</span>
+        </div>
+    </div>
+</body>
+</html>

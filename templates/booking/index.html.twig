@@ -6,9 +6,9 @@
     <div class="management-container">
         <div class="management-header">
             <h1 class="management-title">Gestion des Réservations</h1>
-            <a href="{{ path('app_booking_new') }}" class="create-button">
-                <i class="fas fa-plus-circle me-2"></i>Nouvelle Réservation
-            </a>
+            <div class="pagination">
+              {{ knp_pagination_render(bookings) }}
+            </div>
         </div>
 
         <div class="management-table-container">
@@ -17,9 +17,8 @@
                     <tr>
                         <th class="text-center">ID</th>
                         <th>Client</th>
-                        <th class="text-center">Hôtel</th> <!-- Nouvelle colonne -->
+                        <th class="text-center">Hôtel</th>
                         <th class="text-center">Période</th>
-                        <th class="text-center">Montant en avance </th>
                         <th class="text-center">Invités</th>
                         <th class="text-center">Paiement</th>
                         <th class="text-center">Statut</th>
@@ -27,62 +26,65 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% for booking in bookings %}
-                    <tr>
-                        <td class="text-center fw-bold">#{{ booking.id }}</td>
-                        <td>
-                            <div class="client-info">
-                                <div class="client-name">{{ booking.utilisateur }}</div>
-                                <div class="client-request">{{ booking.specialRequest|default('Aucune demande spéciale') }}</div>
-                            </div>
-                        </td>
-                        <td class="text-center"> <!-- Nouvelle cellule pour l'hôtel -->
-                            <div class="hotel-name">{{ booking.idHotel.nom|default('Aucun hôtel') }}</div>
-                        </td>
-                        <td class="text-center">
-                            <div class="date-range">
-                                <div class="check-in">{{ booking.checkIn|date('d/m/Y') }}</div>
-                                <div class="text-muted"><i class="fas fa-arrow-right"></i></div>
-                                <div class="check-out">{{ booking.checkOut|date('d/m/Y') }}</div>
-                            </div>
-                        </td>
-                        <td class="text-center">{{ booking.montantTotal }} €</td>
-                        <td class="text-center">{{ booking.numberOfGuest }}</td>
-                        <td class="text-center">
-                            <span class="payment-method {{ booking.payementMethod|lower }}">
-                                {{ booking.payementMethod }}
-                            </span>
-                        </td>
-                        <td class="text-center">
-                            <span class="status-badge confirmed">Confirmée</span>
-                        </td>
-                        <td class="text-center actions">
-                            <a href="{{ path('app_booking_show', {'id': booking.id}) }}" class="action-btn view" title="Détails">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="{{ path('app_booking_edit', {'id': booking.id}) }}" class="action-btn edit" title="Modifier">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <form action="{{ path('app_booking_delete', {'id': booking.id}) }}" method="post" class="d-inline">
-                                <button type="submit" class="action-btn delete" title="Supprimer">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="9" class="text-center empty-state"> <!-- Ajuster le colspan -->
-                            <i class="fas fa-calendar-times fa-2x mb-3"></i>
-                            <p>Aucune réservation trouvée</p>
-                        </td>
-                    </tr>
-                {% endfor %}
+                    {% for booking in bookings %}
+                        <tr>
+                            <td class="text-center fw-bold">#{{ booking.id }}</td>
+                            <td>
+                                <div class="client-info">
+                                    <div class="client-name">{{ booking.utilisateur }}</div>
+                                    <div class="client-request">{{ booking.specialRequest|default('Aucune demande spéciale') }}</div>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div class="hotel-name">{{ booking.idHotel.nom|default('Aucun hôtel') }}</div>
+                            </td>
+                            <td class="text-center">
+                                <div class="date-range">
+                                    <div class="check-in">{{ booking.checkIn|date('d/m/Y') }}</div>
+                                    <div class="text-muted"><i class="fas fa-arrow-right"></i></div>
+                                    <div class="check-out">{{ booking.checkOut|date('d/m/Y') }}</div>
+                                </div>
+                            </td>
+                            <td class="text-center">{{ booking.numberOfGuest }}</td>
+                            <td class="text-center">
+                                <span class="payment-method {{ booking.payementMethod|lower }}">
+                                    {{ booking.payementMethod }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span class="status-badge confirmed">Confirmée</span>
+                            </td>
+                            <td class="text-center actions">
+                                <a href="{{ path('app_booking_show', {'id': booking.id}) }}" class="action-btn view" title="Détails">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ path('app_booking_pdf', {'id': booking.id}) }}" 
+                                   class="action-btn pdf" 
+                                   title="Télécharger PDF">
+                                    <i class="fas fa-file-pdf"></i>
+                                </a>
+                                <a href="{{ path('app_booking_edit', {'id': booking.id}) }}" class="action-btn edit" title="Modifier">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form action="{{ path('app_booking_delete', {'id': booking.id}) }}" method="post" class="d-inline">
+                                    <button type="submit" class="action-btn delete" title="Supprimer">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="9" class="text-center empty-state">
+                                <i class="fas fa-calendar-times fa-2x mb-3"></i>
+                                <p>Aucune réservation trouvée</p>
+                            </td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
-
 
     <style>
         /* Design System */
@@ -118,23 +120,6 @@
             font-weight: 600;
             color: var(--primary-color);
             margin: 0;
-        }
-
-        .create-button {
-            background: var(--accent-color);
-            color: var(--text-light);
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .create-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(124, 140, 196, 0.3);
-            color: var(--text-light);
         }
 
         .management-table-container {
@@ -243,6 +228,11 @@
             background: rgba(42, 46, 69, 0.1);
         }
 
+        .action-btn.pdf {
+            color: #F44336;
+            background: rgba(244, 67, 54, 0.1);
+        }
+
         .action-btn.edit {
             color: var(--accent-color);
             background: rgba(125, 140, 196, 0.1);
@@ -280,6 +270,37 @@
                 flex-direction: column;
                 gap: 0.2rem;
             }
+        }
+
+        /* Pagination Styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+        .pagination a,
+        .pagination span {
+            margin: 0 5px;
+            padding: 0.6rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-decoration: none;
+            color: var(--primary-color);
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .pagination a:hover {
+            background-color: var(--accent-color);
+            color: var(--text-light);
+        }
+        .pagination .current,
+        .pagination .active {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            border-color: var(--primary-color);
+        }
+        .pagination .disabled {
+            opacity: 0.5;
+            pointer-events: none;
         }
     </style>
 {% endblock %}

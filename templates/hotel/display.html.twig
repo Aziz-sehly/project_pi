@@ -24,7 +24,7 @@
             font-size: 1.1rem;
             color: #666;
         }
-        /* Detailed hotel card design (using the explore layout) */
+        /* Hotel card styles */
         .explore-content .row {
             display: flex;
             flex-wrap: wrap;
@@ -44,43 +44,10 @@
             transform: translateY(-5px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
-        .single-explore-img {
-            position: relative;
-        }
         .single-explore-img img {
             width: 100%;
             height: auto;
             display: block;
-        }
-        .single-explore-img-info {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-        }
-        .single-explore-img-info button {
-            background: #007bff;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .single-explore-image-icon-box {
-            margin-top: 5px;
-        }
-        .single-explore-image-icon-box ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            gap: 5px;
-        }
-        .single-explore-image-icon {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 5px;
-            border-radius: 50%;
-            color: #fff;
-            font-size: 0.9rem;
         }
         .single-explore-txt {
             padding: 15px;
@@ -89,52 +56,10 @@
             font-size: 1.3rem;
             margin: 0 0 10px;
         }
-        .single-explore-txt h2 a {
-            color: #333;
-            text-decoration: none;
-        }
-        .explore-rating-price {
-            font-size: 0.9rem;
-            margin: 10px 0;
-        }
-        .explore-rating-price span,
-        .explore-rating-price a {
-            margin-right: 5px;
-        }
-        .explore-price-box {
+        .explore-price-line {
             font-weight: bold;
             color: #007bff;
         }
-        .explore-person {
-            margin: 15px 0;
-        }
-        .explore-person-img img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-        }
-        .explore-person p {
-            font-size: 0.85rem;
-            margin: 0;
-            color: #555;
-        }
-        .explore-open-close-part {
-            margin-top: 10px;
-        }
-        .explore-open-close-part .open-btn {
-            background: #28a745;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .explore-map-icon a {
-            margin-left: 5px;
-            color: #007bff;
-            text-decoration: none;
-        }
-        /* Booking link styling */
         .explore-booking {
             text-align: center;
             margin-top: 10px;
@@ -147,16 +72,12 @@
             text-decoration: none;
             font-weight: 600;
             transition: background 0.2s;
+            border: none;
+            cursor: pointer;
+            margin: 0 5px;
         }
         .explore-booking a:hover {
             background: #0056b3;
-        }
-        /* Price styling */
-        .explore-price-line {
-            font-size: 1rem;
-            margin: 10px 0;
-            color: #333;
-            font-weight: 600;
         }
     </style>
 {% endblock %}
@@ -167,102 +88,33 @@
         <p>Découvrez nos hôtels sélectionnés pour vous offrir la meilleure expérience</p>
     </div>
 
-    {# On définit un tableau des images par défaut #}
-    {% set images = ['hotel1.png', 'hotel2.png', 'hotel3.png', 'hotel4.png', 'hotel5.png'] %}
-
     <div class="explore-content">
         <div class="row">
             {% for hotel in hotels %}
-                {# Générer un prix différent pour chaque hôtel (exemple : 100€ + 20€ par index) #}
-                {% set randomPrice = 100 + loop.index * 20 %}
-                {# Générer une note différente pour chaque hôtel entre 3.5 et 5.0 #}
-                {% set randomRating = (3.5 + (loop.index0 % 16) * 0.1)|number_format(1) %}
                 <div class="col-md-4 col-sm-6">
                     <div class="single-explore-item">
                         <div class="single-explore-img">
-                            {# On utilise l'image définie dans hotel.imagePath ou, par défaut, on choisit une image du tableau selon l'index de la boucle #}
                             <img src="{{ asset('uploads/hotels/' ~ hotel.Images) }}" alt="{{ hotel.nom }}">
-                            <div class="single-explore-img-info">
-                                {% if hotel.isFeatured is defined and hotel.isFeatured %}
-                                    <button onclick="window.location.href='#'">Featured</button>
-                                {% else %}
-                                    <button onclick="window.location.href='#'">Best Rated</button>
-                                {% endif %}
-                                <div class="single-explore-image-icon-box">
-                                    <ul>
-                                        <li>
-                                            <div class="single-explore-image-icon">
-                                                <i class="fa fa-arrows-alt"></i>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="single-explore-image-icon">
-                                                <i class="fa fa-bookmark-o"></i>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
                         </div>
                         <div class="single-explore-txt bg-theme-1">
                             <h2><a href="#">{{ hotel.nom }}</a></h2>
-                            <p class="explore-rating-price">
-                                <span class="explore-rating">
-                                    {{ hotel.rating|default(randomRating) }}
-                                </span>
-                                <a href="#"> {{ hotel.ratingsCount|default('12') }} ratings</a>
-                                <span class="explore-price-box">
-                                    from <span class="explore-price">{{ hotel.priceRange|default('$100 - $500') }}</span>
-                                </span>
-                                <a href="#">{{ hotel.type|default('Hotel') }}</a>
-                            </p>
                             <p class="explore-price-line">
-                                Prix: {{ randomPrice }} €
+                                Prix: {{ hotel.prix }} €
                             </p>
-                            <div class="explore-person">
-                                <div class="row">
-                                    <div class="col-sm-2">
-                                        <div class="explore-person-img">
-                                            <a href="#">
-                                                <img src="{{ asset('assets/images/explore/person.png') }}" alt="Reviewer">
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-10">
-                                        <p>
-                                            {{ hotel.description|default('A luxurious experience with excellent service and stunning views. Highly recommended for a relaxing stay.') }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="explore-open-close-part">
-                                <div class="row">
-                                    <div class="col-sm-7">
-                                        <div class="explore-map-icon">
-                                            <a href="#"><i data-feather="map-pin"></i></a>
-                                            <a href="#"><i data-feather="upload"></i></a>
-                                            <a href="#"><i data-feather="heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Add the contact info in table format -->
-                        <table>
-                            <tr>
-                                <td>Email:</td>
-                                <td>{{ hotel.contactEmail }}</td>
-                            </tr>
-                            <tr>
-                                <td>Phone:</td>
-                                <td>{{ hotel.phone }}</td>
-                            </tr>
-                        </table>
+
+                            {# Display Average Rating #}
+                            {% if hotel.getAverageRating() is not null %}
+                                <p>⭐ rating sur hotel: {{ hotel.getAverageRating() }}/5</p>
+                            {% else %}
+                                <p>Aucun rating</p>
+                            {% endif %}
+
+                            
                             <div class="explore-booking">
                                 <a href="{{ path('app_booking_new', {'id': hotel.id}) }}">📅 Réserver</a>
+                                <a href="{{ path('app_hotel_rate', {'id': hotel.id}) }}" style="background:#28a745;">⭐ Noter cet hôtel</a>
                             </div>
                         </div>
-
-                        
                     </div>
                 </div>
             {% else %}

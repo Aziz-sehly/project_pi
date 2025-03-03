@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Choix de paiement{% endblock %}
+
+{% block body %}
+<div class="payment-container">
+    <h1>Votre réservation a été enregistrée !</h1>
+    <p>Souhaitez-vous payer maintenant ?</p>
+    <div class="button-group">
+        <button id="stripePayBtn" class="btn btn-primary">Payer avec Stripe</button>
+        <a href="{{ path('hotel_liste') }}" class="btn btn-secondary">Non, merci</a>
+    </div>
+</div>
+
+<style>
+    .payment-container {
+        margin: 50px auto;
+        padding: 30px;
+        max-width: 600px;
+        text-align: center;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .payment-container h1 {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .payment-container p {
+        font-size: 1.2rem;
+        color: #555;
+    }
+
+    .button-group {
+        margin-top: 30px;
+    }
+
+    .btn {
+        margin: 10px;
+        padding: 12px 25px;
+        font-size: 1.1rem;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+        display: inline-block;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+</style>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    const stripe = Stripe("{{ stripe_public_key }}");
+
+    document.getElementById("stripePayBtn").addEventListener("click", function(){
+        // Appel de l'endpoint checkout avec l'id de réservation
+        fetch("/checkout/{{ booking.id }}")
+            .then(response => response.json())
+            .then(session => {
+                stripe.redirectToCheckout({ sessionId: session.id });
+            })
+            .catch(error => console.error("Erreur :", error));
+    });
+</script>
+{% endblock %}

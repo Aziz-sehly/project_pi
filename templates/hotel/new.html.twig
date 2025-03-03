@@ -159,6 +159,13 @@
                             {{ form_errors(form.adresse)|striptags }}
                         </div>
                     </div>
+                    <div class="mb-4">
+                       <label for="{{ form.prix.vars.id }}" class="form-label text-muted">prix (€)</label>
+                       {{ form_widget(form.prix, { 'attr': {'class': 'form-control', 'placeholder': 'prix'} }) }}
+                       <div class="invalid-feedback">
+                          {{ form_errors(form.prix) }}
+                       </div>
+                    </div>
 
                     <!-- Description -->
                     <div class="mb-4">

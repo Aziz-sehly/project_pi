@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
@@ -29,6 +30,9 @@ class HotelType extends AbstractType
             ->add('adresse', TextType::class, [
                 'attr' => ['class' => 'form-control'],
                 'label' => 'Adresse'
+            ])
+            ->add('prix', NumberType::class, [
+                'required' => true,
             ])
             ->add('description', TextareaType::class, [
                 'attr' => ['class' => 'form-control', 'rows' => 4],
@@ -69,4 +73,5 @@ class HotelType extends AbstractType
             'attr' => ['novalidate' => 'novalidate']
         ]);
     }
+    
 }

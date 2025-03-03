@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Booking Confirmation{% endblock %}
+
+{% block body %}
+    <div class="container text-center mt-5">
+        <h1 class="text-success">Booking Confirmed!</h1>
+        <p>Thank you for your reservation. Here are your booking details:</p>
+
+        <div class="card p-4 shadow-sm">
+            <h4>Booking ID: {{ booking.id }}</h4>
+            <p><strong>Hotel:</strong> {{ booking.idHotel.nom }}</p>
+            <p><strong>Check-in:</strong> {{ booking.checkInDate|date('d/m/Y') }}</p>
+            <p><strong>Check-out:</strong> {{ booking.checkOutDate|date('d/m/Y') }}</p>
+        </div>
+
+        <h3 class="mt-4">Scan this QR code for your reservation details:</h3>
+        <img src="data:image/png;base64,{{ qrCode }}" alt="QR Code">
+
+        <div class="mt-4">
+            <a href="{{ path('app_booking_index') }}" class="btn btn-primary">Go to Bookings</a>
+            <a href="{{ path('homepage') }}" class="btn btn-secondary">Back to Home</a>
+        </div>
+    </div>
+{% endblock %}

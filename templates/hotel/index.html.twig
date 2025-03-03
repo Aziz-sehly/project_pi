@@ -1,131 +1,291 @@
 {% extends 'back.html.twig' %}
 
-{% block title %}Hotel index{% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
-        }
-
-        h1 {
-            text-align: center;
-            color: #007bff;
-            font-weight: 600;
-            font-size: 2rem;
-            margin-bottom: 40px;
-        }
-
-        table {
-            width: 100%;
-            margin-bottom: 40px;
-            border-collapse: collapse;
-            background-color: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        table th, table td {
-            padding: 15px;
-            text-align: left;
-            font-size: 1rem;
-        }
-
-        table th {
-            background-color: #007bff;
-            color: #fff;
-        }
-
-        table td {
-            border-top: 1px solid #ddd;
-        }
-
-        table td a {
-            margin-right: 10px;
-            color: #007bff;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        table td a:hover {
-            text-decoration: underline;
-        }
-
-        .table-container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .btn-create {
-            display: block;
-            text-align: center;
-            background-color: #28a745;
-            color: white;
-            padding: 12px 20px;
-            font-size: 1.1rem;
-            border-radius: 5px;
-            font-weight: 600;
-            text-decoration: none;
-            margin-top: 30px;
-        }
-
-        .btn-create:hover {
-            background-color: #218838;
-        }
-
-        .no-records {
-            text-align: center;
-            font-size: 1.1rem;
-            color: #6c757d;
-            font-weight: 500;
-        }
-    </style>
-{% endblock %}
+{% block title %}Liste des Hôtels{% endblock %}
 
 {% block body %}
-    <h1>Liste des Hôtels</h1>
+    <style>
+        .reservation-table {
+            font-size: 0.8rem;
+        }
+        .reservation-table thead th,
+        .reservation-table tbody td {
+            padding: 0.3rem 0.5rem;
+        }
+        .hotel-card {
+            transition: all 0.3s ease;
+        }
+        #searchInput {
+            max-width: 600px;
+            margin: 20px auto;
+        }
+    </style>
 
-    <div class="table-container">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Région</th>
-                    <th>Nom</th>
-                    <th>Adresse</th>
-                    <th>Description</th>
-                    <th>Email de contact</th>
-                    <th>Téléphone</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for hotel in hotels %}
-                    <tr>
-                        <td>{{ hotel.id }}</td>
-                        <td>{{ hotel.region }}</td>
-                        <td>{{ hotel.nom }}</td>
-                        <td>{{ hotel.adresse }}</td>
-                        <td>{{ hotel.description }}</td>
-                        <td>{{ hotel.contactEmail }}</td>
-                        <td>{{ hotel.phone }}</td>
-                        <td>
-                            <a href="{{ path('app_hotel_show', {'id': hotel.id}) }}">Voir</a>
-                            <a href="{{ path('app_hotel_edit', {'id': hotel.id}) }}">Modifier</a>
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="8" class="no-records">Aucun hôtel trouvé</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="container">
+        <h1 class="text-center text-primary my-4">Liste des Hôtels</h1>
+        
+        <!-- Barre de recherche -->
+        <div class="row">
+            <div class="col-12">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="form-control form-control-lg shadow-sm" 
+                    placeholder="Rechercher par nom, région, adresse ou description..."
+                >
+            </div>
+        </div>
+
+        <!-- Sélecteur de tri -->
+        <div class="row my-3">
+            <div class="col-12">
+                <select id="sortSelect" class="form-select">
+                    <option value="name">Trier par Nom</option>
+                    <option value="price">Trier par Prix</option>
+                    <option value="region">Trier par Région</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row" id="hotelsContainer">
+            {% for hotel in hotels %}
+                <div class="col-md-4 col-sm-6 mb-4 hotel-card" 
+                    data-search="{{ 
+                        hotel.nom|lower ~ ' ' ~ 
+                        hotel.region|lower ~ ' ' ~ 
+                        hotel.adresse|lower ~ ' ' ~ 
+                        hotel.description|lower
+                    }}"
+                    data-name="{{ hotel.nom }}"
+                    data-price="{{ hotel.prix }}"
+                    data-region="{{ hotel.region }}"
+                >
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-dark text-white">
+                            <h5 class="card-title mb-0">{{ hotel.nom }}</h5>
+                        </div>
+                        
+                        <div class="card-body">
+                            <p><strong>Région :</strong> {{ hotel.region }}</p>
+                            <p><strong>Adresse :</strong> {{ hotel.adresse }}</p>
+                            <p><strong>Prix :</strong> {{ hotel.prix }}</p>
+                            <p><strong>Description :</strong> {{ hotel.description }}</p>
+                            <p><strong>Email :</strong> {{ hotel.contactEmail }}</p>
+                            <p><strong>Téléphone :</strong> {{ hotel.phone }}</p>
+                        </div>
+
+                        <div class="card-footer d-flex justify-content-between">
+                            <a href="{{ path('app_hotel_show', {'id': hotel.id}) }}" class="btn btn-info btn-sm">Voir</a>
+                            <a href="{{ path('app_hotel_edit', {'id': hotel.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                        </div>
+
+                        <div class="card-body border-top">
+                            <h6 class="text-secondary">Réservations</h6>
+                            {% if hotel.bookings is empty %}
+                                <p class="text-muted">Aucune réservation trouvée.</p>
+                            {% else %}
+                                <table class="table table-bordered table-sm mt-2 reservation-table">
+                                    <thead class="table-dark text-white">
+                                        <tr>
+                                            <th>Client</th>
+                                            <th>Check In</th>
+                                            <th>Check Out</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for booking in hotel.bookings %}
+                                            <tr>
+                                                <td>{{ booking.utilisateur }}</td>
+                                                <td>{{ booking.checkIn|date('d/m/Y') }}</td>
+                                                <td>{{ booking.checkOut|date('d/m/Y') }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12 text-center text-danger">
+                    Aucun hôtel trouvé.
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Message aucun résultat -->
+        <div id="noResults" class="d-none text-center text-danger mt-4">
+            <i class="fas fa-search-minus fa-2x mb-2"></i>
+            <h4>Aucun résultat trouvé pour votre recherche</h4>
+        </div>
+
+        <!-- Statistiques -->
+        <div class="row mt-4" id="statsContainer">
+            <div class="col-md-4">
+                <div class="card text-white bg-primary">
+                    <div class="card-body">
+                        <h5 class="card-title">Total des hôtels</h5>
+                        <p class="card-text" id="totalHotels">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-success">
+                    <div class="card-body">
+                        <h5 class="card-title">Prix moyen</h5>
+                        <p class="card-text" id="averagePrice">0 €</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <canvas id="regionChart" class="mt-4"></canvas>
+        <canvas id="priceChart" class="mt-4"></canvas>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const hotelsContainer = document.getElementById('hotelsContainer');
+                const hotelCards = document.querySelectorAll('.hotel-card');
+                const totalHotels = document.getElementById('totalHotels');
+                const averagePrice = document.getElementById('averagePrice');
+
+                function updateStatistics() {
+                    let count = 0;
+                    let totalPrice = 0;
+                    let regionData = {};
+
+                    hotelCards.forEach(card => {
+                        if (card.style.display !== 'none') {
+                            count++;
+                            let price = parseFloat(card.dataset.price);
+                            let region = card.dataset.region;
+
+                            if (!isNaN(price)) {
+                                totalPrice += price;
+                            }
+
+                            regionData[region] = (regionData[region] || 0) + 1;
+                        }
+                    });
+
+                    totalHotels.textContent = count;
+                    averagePrice.textContent = count ? (totalPrice / count).toFixed(2) + ' €' : '0 €';
+                    
+                    updateCharts(regionData);
+                }
+
+                function updateCharts(regionData) {
+                    const ctx1 = document.getElementById('regionChart').getContext('2d');
+                    new Chart(ctx1, {
+                        type: 'pie',
+                        data: {
+                            labels: Object.keys(regionData),
+                            datasets: [{
+                                data: Object.values(regionData),
+                                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+                            }]
+                        }
+                    });
+                }
+                
+                updateStatistics();
+            });
+        </script>
     </div>
 
-    <a href="{{ path('app_hotel_new') }}" class="btn-create">Créer un nouvel hôtel</a>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const hotelsContainer = document.getElementById('hotelsContainer');
+            const hotelCards = document.querySelectorAll('.hotel-card');
+            const noResults = document.getElementById('noResults');
+            const statsContainer = document.getElementById('statsContainer');
+            const sortSelect = document.getElementById('sortSelect');
+            let searchTimeout;
+
+            // Délai de recherche (300ms)
+            const DEBOUNCE_DELAY = 300;
+
+            function updateStatistics() {
+                let totalHotels = 0;
+                let totalPrice = 0;
+                let regions = {};
+
+                hotelCards.forEach(card => {
+                    if (card.style.display !== 'none') {
+                        totalHotels++;
+                        let price = parseFloat(card.dataset.price);
+                        let region = card.dataset.region;
+
+                        if (!isNaN(price)) {
+                            totalPrice += price;
+                        }
+
+                        regions[region] = (regions[region] || 0) + 1;
+                    }
+                });
+
+                const averagePrice = totalHotels ? (totalPrice / totalHotels).toFixed(2) : 0;
+                let regionStats = Object.entries(regions).map(([region, count]) => `<li>${region}: ${count} hôtels</li>`).join('');
+
+                statsContainer.innerHTML = `
+                    <p><strong>Total hôtels :</strong> ${totalHotels}</p>
+                    <p><strong>Prix moyen :</strong> ${averagePrice} €</p>
+                    <ul>${regionStats}</ul>
+                `;
+            }
+
+            function performSearch() {
+                const searchTerms = searchInput.value.trim().toLowerCase().split(' ');
+                let visibleCount = 0;
+
+                hotelCards.forEach(card => {
+                    const searchData = card.dataset.search;
+                    const matchesAll = searchTerms.every(term => 
+                        term === '' || searchData.includes(term)
+                    );
+
+                    card.style.display = matchesAll ? 'block' : 'none';
+                    if (matchesAll) visibleCount++;
+                });
+
+                hotelsContainer.style.opacity = visibleCount > 0 ? 1 : 0;
+                noResults.classList.toggle('d-none', visibleCount > 0);
+
+                updateStatistics();
+            }
+
+            function sortHotels() {
+                let sortBy = sortSelect.value;
+                let sortedHotels = Array.from(hotelCards);
+                
+                sortedHotels.sort((a, b) => {
+                    if (sortBy === 'name') {
+                        return a.dataset.name.localeCompare(b.dataset.name);
+                    } else if (sortBy === 'price') {
+                        return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
+                    } else if (sortBy === 'region') {
+                        return a.dataset.region.localeCompare(b.dataset.region);
+                    }
+                    return 0;
+                });
+                
+                hotelsContainer.innerHTML = '';
+                sortedHotels.forEach(hotel => hotelsContainer.appendChild(hotel));
+            }
+
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(performSearch, DEBOUNCE_DELAY);
+            });
+            
+            sortSelect.addEventListener('change', sortHotels);
+
+            // Initialisation
+            performSearch();
+            updateStatistics();
+        });
+    </script>
 {% endblock %}

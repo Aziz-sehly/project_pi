@@ -7,18 +7,17 @@
     <div class="card p-5 shadow-lg rounded-lg" style="max-width: 700px; width: 100%; background-color: #ffffff;">
         <h3 class="text-center text-primary mb-4">Créer une réservation</h3>
 
-        {# Added an id to the form for easier JavaScript handling #}
+        {# Flash messages #}
         {% for message in app.flashes('success') %}
-    <div class="alert alert-success mt-3">
-        {{ message }}
-    </div>
-{% endfor %}
-
-{% for message in app.flashes('error') %}
-    <div class="alert alert-danger mt-3">
-        {{ message }}
-    </div>
-{% endfor %}
+            <div class="alert alert-success mt-3">
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger mt-3">
+                {{ message }}
+            </div>
+        {% endfor %}
 
         {{ form_start(form, { 'attr': {'novalidate': 'novalidate', 'id': 'reservationForm'} }) }}
 
@@ -54,13 +53,7 @@
             </div>
         </div>
 
-        <div class="mb-4">
-            <label for="{{ form.montant_total.vars.id }}" class="form-label text-muted">Montant en avance (€)</label>
-            {{ form_widget(form.montant_total, { 'attr': {'class': 'form-control', 'placeholder': 'Montant en avance'} }) }}
-            <div class="invalid-feedback">
-                {{ form_errors(form.montant_total) }}
-            </div>
-        </div>
+        
 
         <div class="mb-4">
             <label for="{{ form.number_of_guest.vars.id }}" class="form-label text-muted">Nombre d'invités</label>
@@ -90,7 +83,7 @@
             <button type="submit" class="btn btn-primary btn-lg" id="submitButton">Enregistrer la réservation</button>
         </div>
 
-        {# Hidden success message that will display after submission #}
+        {# Message de succès masqué #}
         <div id="successMessage" class="alert alert-success mt-3" style="display: none;">
             Réservation enregistrée avec succès !
         </div>
@@ -100,8 +93,42 @@
         </div>
 
         {{ form_end(form) }}
+
+        {# Le bouton "Payer" a été supprimé #}
     </div>
 </div>
+
+{# Script Stripe et redirection automatique #}
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    document.getElementById("reservationForm").addEventListener("submit", function(e) {
+        // Récupère la valeur du champ "Méthode de paiement"
+        var paymentMethod = document.getElementById("{{ form.payement_method.vars.id }}").value;
+       
+        
+
+            // Récupère l'ID de l'hôtel sélectionné
+            var hotelSelect = document.getElementById("{{ form.id_hotel.vars.id }}");
+            var hotelId = hotelSelect.value;
+            if (!hotelId) {
+                alert("Veuillez sélectionner un hôtel.");
+                return;
+            }
+            
+            // Ici, vous pouvez ajouter un appel Ajax pour sauvegarder la réservation avant paiement si nécessaire
+            
+            // Création de la session Stripe en appelant votre backend
+            fetch("/checkout/" + hotelId)
+                .then(response => response.json())
+                .then(session => {
+                    var stripe = Stripe("{{ stripe_public_key }}");
+                    stripe.redirectToCheckout({ sessionId: session.id });
+                })
+                .catch(error => console.error("Erreur :", error));
+        }
+        // Sinon, la soumission du formulaire se fait normalement
+    });
+</script>
 
 <style>
     body {
@@ -109,7 +136,6 @@
         margin: 0;
         padding: 0;
     }
-
     .container {
         min-height: 100vh;
         display: flex;
@@ -117,7 +143,6 @@
         align-items: center;
         background: linear-gradient(135deg, #f0f2f5, #dde1e7);
     }
-
     .card {
         border-radius: 20px;
         padding: 30px;
@@ -125,19 +150,16 @@
         background-color: #ffffff;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     }
-
     h3 {
         font-size: 1.8rem;
         font-weight: bold;
         color: #007bff;
     }
-
     .form-label {
         font-weight: 600;
         font-size: 1rem;
         color: #6c757d;
     }
-
     .form-control {
         font-size: 1rem;
         padding: 12px;
@@ -145,17 +167,14 @@
         border: 1px solid #ddd;
         transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
-
     .form-control:focus {
         border-color: #007bff;
         box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
     }
-
     .invalid-feedback {
         font-size: 0.875rem;
         color: #dc3545;
     }
-
     .btn-primary {
         background-color: #007bff;
         border: none;
@@ -164,11 +183,9 @@
         border-radius: 30px;
         transition: background-color 0.3s ease;
     }
-
     .btn-primary:hover {
         background-color: #0056b3;
     }
-
     .btn-secondary {
         background-color: #6c757d;
         border: none;
@@ -177,19 +194,14 @@
         border-radius: 30px;
         transition: background-color 0.3s ease;
     }
-
     .btn-secondary:hover {
         background-color: #5a6268;
     }
-
     .mb-4 {
         margin-bottom: 1.5rem;
     }
-
     .d-grid {
         margin-top: 20px;
     }
 </style>
-
-
 {% endblock %}

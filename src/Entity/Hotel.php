@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\Rating;
 
 #[ORM\Entity(repositoryClass: HotelRepository::class)]
 class Hotel
@@ -37,6 +38,11 @@ class Hotel
     )]
     private ?string $adresse = null;
 
+    #[ORM\Column]
+    #[Assert\NotNull(message: "Le prix est obligatoire.")]
+    #[Assert\Positive(message: "Le prix doit être positif.")]
+    private ?float $prix = null;
+
     #[ORM\Column(length: 255)]
     #[Assert\Length(
         max: 255,
@@ -63,11 +69,20 @@ class Hotel
     #[ORM\Column(length: 255, nullable: false, options: ["default" => ""])]
     private ?string $images = '';
 
+    /**
+     * @var Collection<int, Rating>
+     */
+    #[ORM\OneToMany(targetEntity: Rating::class, mappedBy: 'hotel')]
+    private Collection $ratings;
+
 
     public function __construct()
     {
         $this->bookings = new ArrayCollection();
+        $this->ratings = new ArrayCollection();
     }
+    
+    
 
     // Getters et setters...
 
@@ -158,4 +173,51 @@ class Hotel
 
         return $this;
     }
+
+    public function getprix(): ?float { return $this->prix; }
+    public function setprix(float $prix): static {
+        $this->prix = $prix;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Rating>
+     */
+    public function getRatings(): Collection
+    {
+        return $this->ratings;
+    }
+
+    public function addRating(Rating $rating): static
+    {
+        if (!$this->ratings->contains($rating)) {
+            $this->ratings->add($rating);
+            $rating->setHotel($this);
+        }
+
+        return $this;
+    }
+    
+
+    public function removeRating(Rating $rating): static
+    {
+        if ($this->ratings->removeElement($rating)) {
+            // set the owning side to null (unless already changed)
+            if ($rating->getHotel() === $this) {
+                $rating->setHotel(null);
+            }
+        }
+
+        return $this;
+    }
+    public function getAverageRating(): ?float
+{
+    if ($this->ratings->isEmpty()) {
+        return null; // No ratings yet
+    }
+
+    $totalScore = array_sum(array_map(fn($rating) => $rating->getScore(), $this->ratings->toArray()));
+    return round($totalScore / count($this->ratings), 1);
+}
+
 }

@@ -41,9 +41,8 @@ class BookingType extends AbstractType
                 'attr' => ['class' => 'form-control'],
                 'data' => new \DateTime('now'),  // You can modify this to some default check-out date
             ])
-            ->add('montant_total', NumberType::class, [
-                'required' => true,
-            ])
+            
+            
             ->add('number_of_guest', NumberType::class, [
                 'required' => true,
             ])
