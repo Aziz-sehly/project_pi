@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <div class="min-h-screen flex flex-col items-center  bg-gray-100 text-gray-900">
+
+        <nav class="bg-white shadow-md w-full py-4">
+            <div class="container mx-auto flex justify-between items-center">
+  
+                <a href="#" class="text-2xl font-semibold text-gray-800">GoTo</a>
+
+    
+                <div>
+                    <form method="post" action="{{ path('app_logout') }}">
+                        <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-lg text-white font-medium transition duration-200">
+                            Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+
+        <div class="w-full max-w-4xl p-8 bg-white shadow-lg rounded-lg mt-10">
+      
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-semibold text-gray-900 mb-4">Welcome, {{ app.user.nom }}!</h1>
+                <p class="text-lg text-gray-600">
+                    We're excited to have you with us. Enjoy browsing our exclusive artisanal collection made just for you.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-blue-300 rounded-full flex items-center justify-center text-white text-xl font-semibold">
+                        👤
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-xl text-gray-800">{{ app.user.nom }} {{ app.user.prenom }}</h3>
+                        <p class="text-gray-600">Full Name</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-green-300 rounded-full flex items-center justify-center text-white text-xl font-semibold">
+                        📱
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-xl text-gray-800">{{ app.user.tel }}</h3>
+                        <p class="text-gray-600">Phone Number</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-purple-300 rounded-full flex items-center justify-center text-white text-xl font-semibold">
+                        ✉️
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-xl text-gray-800">{{ app.user.email }}</h3>
+                        <p class="text-gray-600">Email Address</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-8">
+                <a  href="{{ path('client_edit', {'id': app.user.id}) }}" class="inline-block px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg shadow-md transition duration-200">
+                    Edit Profile
+                </a>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User Details - {{ user.email }}{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto py-12 px-4">
+        <h1 class="text-4xl font-semibold text-center mb-12 text-blue-600">User Details</h1>
+
+        <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="flex flex-col">
+                    <p class="text-xl font-medium text-gray-700">Email:</p>
+                    <p class="text-lg text-gray-500">{{ user.email }}</p>
+                </div>
+
+                <div class="flex flex-col">
+                    <p class="text-xl font-medium text-gray-700">Full Name:</p>
+                    <p class="text-lg text-gray-500">{{ user.nom }} {{ user.prenom }}</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                <div class="flex flex-col">
+                    <p class="text-xl font-medium text-gray-700">Phone:</p>
+                    <p class="text-lg text-gray-500">{{ user.tel }}</p>
+                </div>
+
+                <div class="flex flex-col">
+                    <p class="text-xl font-medium text-gray-700">Roles:</p>
+                    <div class="flex flex-wrap space-x-2">
+   
+                            <span class="text-sm bg-gray-800 text-white py-1 px-3 rounded-full">{{ user.roles[0] }}</span>
+                  
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 text-center">
+                <a href="{{ path('admin_user_edit', {'id': user.id}) }}" 
+                   class="inline-block px-6 py-3 text-white bg-blue-600 rounded-lg text-lg font-semibold transition hover:bg-blue-700">
+                    Edit User
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
