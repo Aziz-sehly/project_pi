@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Shopping Cart</h1>
+    <ul>
+        {% for item in cart %}
+            <li>
+                {{ item.product.name }} - {{ item.quantity }} x ${{ item.product.price }}
+                <a href="{{ path('cart_remove', {'id': item.product.id}) }}">Remove</a>
+            </li>
+        {% endfor %}
+    </ul>
+    
+    <a href="{{ path('payment_checkout') }}" class="btn btn-success">Proceed to Checkout</a>
+
+{% endblock %}
+
