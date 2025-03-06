@@ -13,4 +13,12 @@ final class TestControllerTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
     }
+
+    #[Route('/test-email', name: 'test_email')]
+    public function testEmail(MailerService $mailerService): Response
+    {
+        $mailerService->sendTestEmail('client@example.com');
+
+        return new Response('Test email sent successfully!');
+    }
 }
