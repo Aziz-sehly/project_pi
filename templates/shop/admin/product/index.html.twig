@@ -1,0 +1,72 @@
+{% extends 'shop/admin/base.html.twig' %}
+
+{% block title %}Product List{% endblock %}
+
+{% block body %}
+    <div class="page-inner">
+        <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+            <div>
+                <h3 class="fw-bold mb-3">Product</h3>
+            </div>
+            <div class="ms-md-auto py-2 py-md-0">
+                <a href="{{ path('app_product_new') }}" class="btn btn-label-info btn-round me-2">Add Product</a>
+                <a href="{{ path('app_product_index') }}" class="btn btn-primary btn-round">Back to list</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Product List</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-head-bg-info table-bordered-bd-info table-hover mt-4">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Region</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Stock</th>
+                                    <th scope="col">Price (€)</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for product in products %}
+                                    <tr>
+                                        <td class="fw-bold">{{ product.id }}</td>
+                                        <td>{{ product.region }}</td>
+                                        <td class="fw-semibold">{{ product.name }}</td>
+                                        <td>{{ product.description|length > 50 ? product.description|slice(0, 50) ~ '...' : product.description}}</td>
+                                        <td>{{ product.createdAt ? product.createdAt|date('d/m/Y H:i') : 'Not defined' }}</td>
+                                        <td>{{ product.stock }}</td>
+                                        <td><span class="badge bg-primary">{{ product.price }} €</span></td>
+                                        <td>
+                                            <a href="{{ path('app_product_show', {'id': product.id}) }}"
+                                               class="btn btn-primary btn-sm me-2">
+                                                <i class="bi bi-eye"></i> View
+                                            </a>
+                                            <a href="{{ path('app_product_edit', {'id': product.id}) }}"
+                                               class="btn btn-warning btn-sm">
+                                                <i class="bi bi-pencil-square"></i> Edit
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="8" class="text-center text-muted">No products found.</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
