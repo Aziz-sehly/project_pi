@@ -13,6 +13,6 @@ class ShopAdminController extends AbstractController
     #[Route('/shop_admin', name: 'shop_admin')]
     public function index(): Response
     {
-        return $this->render('shop/back/index.html.twig');
+        return $this->render('shop/admin/index.html.twig');
     }
 }

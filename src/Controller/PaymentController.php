@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Order;
-use App\Repository\ProductRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use PayPal\Auth\OAuthTokenCredential;
+use PayPal\Rest\ApiContext;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +31,7 @@ class PaymentController extends AbstractController
     }
 
     #[Route('', name: 'payment_checkout')]
-    public function checkout(ProductRepository $productRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function checkout(Request $request, EntityManagerInterface $entityManager): Response
     {
         $cart = $request->getSession()->get('cart', []);
         if (!$cart) {
@@ -37,26 +40,23 @@ class PaymentController extends AbstractController
 
         $total = 0;
         $products = [];
-        foreach ($cart as $productId => $quantity) {
-            $product = $productRepository->find($productId);
-            if ($product) {
-                $total += $product->getPrice() * $quantity;
-                $products[] = [
-                    'product_id' => $product->getId(),
-                    'name' => $product->getName(),
-                    'quantity' => $quantity,
-                    'price' => $product->getPrice(),
-                ];
-            }
+        foreach ($cart as $productId => $data) {
+            $total += $data['price'] * $data['quantity'];
+            $products[] = [
+                'product_id' => $productId,
+                'name' => $data['name'],
+                'quantity' => $data['quantity'],
+                'price' => $data['price'],
+            ];
         }
 
         $order = new Order();
         $order->setCustomerName("Guest User")
-              ->setCustomerEmail("guest@example.com")
-              ->setTotal($total)
-              ->setCreatedAt(new \DateTimeImmutable())
-              ->setStatus('pending')
-              ->setProducts($products); // Store products as an array
+            ->setCustomerEmail("guest@example.com")
+            ->setTotal($total)
+            ->setCreatedAt(new DateTimeImmutable())
+            ->setStatus('pending')
+            ->setProducts($products); // Store products as an array
 
         $entityManager->persist($order);
         $entityManager->flush();
@@ -68,26 +68,16 @@ class PaymentController extends AbstractController
     }
 
     #[Route('/pay', name: 'payment_process')]
-    public function pay(SessionInterface $session, ProductRepository $productRepository): Response
+    public function pay(SessionInterface $session): Response
     {
         $cart = $session->get('cart', []);
         if (!$cart) {
-            return $this->redirectToRoute('shop'); // Redirect if cart is empty
+            return $this->redirectToRoute('shop');
         }
 
         $total = 0;
-        $products = [];  
-        foreach ($cart as $productId => $quantity) {
-            $product = $productRepository->find($productId);
-            if ($product) {
-                $total += $product->getPrice() * $quantity;
-                $products[] = [
-                    'id' => $productId,
-                    'quantity' => $quantity,
-                    'price' => $product->getPrice(),
-                    'name' => $product->getName()
-                ]; 
-            }
+        foreach ($cart as $data) {
+            $total += $data['price'] * $data['quantity'];
         }
 
         if (!is_numeric($total)) {
@@ -103,22 +93,22 @@ class PaymentController extends AbstractController
 
         $transaction = new Transaction();
         $transaction->setAmount($amount)
-                    ->setDescription("Order Payment");
+            ->setDescription("Order Payment");
 
         $redirectUrls = new RedirectUrls();
         $redirectUrls->setReturnUrl($this->urlGenerator->generate('payment_success', [], UrlGeneratorInterface::ABSOLUTE_URL))
-                     ->setCancelUrl($this->urlGenerator->generate('payment_cancel', [], UrlGeneratorInterface::ABSOLUTE_URL));
+            ->setCancelUrl($this->urlGenerator->generate('payment_cancel', [], UrlGeneratorInterface::ABSOLUTE_URL));
 
         $payment = new Payment();
         $payment->setIntent("sale")
-                ->setPayer($payer)
-                ->setTransactions([$transaction])
-                ->setRedirectUrls($redirectUrls);
+            ->setPayer($payer)
+            ->setTransactions([$transaction])
+            ->setRedirectUrls($redirectUrls);
 
         try {
             $payment->create($this->getPayPalClient());
             return $this->redirect($payment->getApprovalLink());
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             return new Response($ex->getMessage());
         }
     }
@@ -126,21 +116,25 @@ class PaymentController extends AbstractController
     #[Route('/success', name: 'payment_success')]
     public function success(SessionInterface $session): Response
     {
-        $session->set('cart', []); 
-        return $this->render('payment/success.html.twig');
+        $cart = $session->get('cart', []);
+        $session->set('cart', []);
+        return $this->render('shop/front/payment/success.html.twig', [
+            'cart' => $cart,
+        ]);
     }
 
     #[Route('/cancel', name: 'payment_cancel')]
-    public function cancel(): Response
+    public function cancel(SessionInterface $session): Response
     {
-        return $this->render('payment/cancel.html.twig');
+        $session->set('cart', []);
+        return $this->render('shop/front/payment/cancel.html.twig');
     }
 
-    private function getPayPalClient()
+    private function getPayPalClient(): ApiContext
     {
-        return new \PayPal\Rest\ApiContext(
-            new \PayPal\Auth\OAuthTokenCredential(
-                $_ENV['PAYPAL_CLIENT_ID'], 
+        return new ApiContext(
+            new OAuthTokenCredential(
+                $_ENV['PAYPAL_CLIENT_ID'],
                 $_ENV['PAYPAL_SECRET']
             )
         );

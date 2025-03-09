@@ -1,0 +1,88 @@
+{% extends 'shop/front/base.html.twig' %}
+{% set total = 0 %}
+{% block body %}
+    <!--================Cart Area =================-->
+    <section class="cart_area">
+        <div class="container">
+            <div class="cart_inner">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Product</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Total</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in cart %}
+                            {% set total = total + (item.price * item.quantity) %}
+                            <tr>
+                                <td>
+                                    <div class="media">
+                                        <div class="d-flex">
+                                            <img src="{{ asset('/shop_front/img/cart.jpg') }}" alt="">
+                                        </div>
+                                        <div class="media-body">
+                                            <p>{{ item.name }}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <h5>${{ item.price }}</h5>
+                                </td>
+                                <td>
+                                    <div class="product_count">
+                                        <input disabled type="text" name="qty" id="sst" maxlength="12" value="{{ item.quantity }}" title="Quantity:"
+                                               class="input-text qty">
+                                    </div>
+                                </td>
+                                <td>
+                                    <h5>${{ item.price * item.quantity  | number_format(2) }}</h5>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center">Cart is empty</td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td>
+
+                            </td>
+                            <td>
+
+                            </td>
+                            <td>
+                                <h5>Total</h5>
+                            </td>
+                            <td>
+                                <h5>${{ total }}</h5>
+                            </td>
+                        </tr>
+                        <tr class="out_button_area">
+                            <td>
+
+                            </td>
+                            <td>
+
+                            </td>
+                            <td>
+
+                            </td>
+                            <td>
+                                <div class="checkout_btn_inner d-flex align-items-center">
+                                    <a class="gray_btn" href="{{ path('shop') }}">Continue Shopping</a>
+                                    <a class="primary-btn" href="{{path('payment_process') }}">Pay with Paypal</a>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

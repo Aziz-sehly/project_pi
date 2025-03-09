@@ -1,0 +1,57 @@
+{% extends 'shop/front/base.html.twig' %}
+{% set total = 0 %}
+{% block body %}
+    <!--================Order Details Area =================-->
+    <section class="order_details section_gap">
+        <div class="container">
+            <h3 class="title_confirmation">Thank you. Your order has been received.</h3>
+            <div class="order_details_table">
+                <h2>Order Details</h2>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Product</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Total</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in cart %}
+                            {% set total = total + (item.price * item.quantity) %}
+                            <tr>
+                                <td>
+                                    <p>{{ item.name }}</p>
+                                </td>
+                                <td>
+                                    <h5>x {{ item.quantity }}</h5>
+                                </td>
+                                <td>
+                                    <p>${{ item.price * item.quantity  | number_format(2) }}</p>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center">order is empty</td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td>
+                                <h4>Total</h4>
+                            </td>
+                            <td>
+                                <h5></h5>
+                            </td>
+                            <td>
+                                <p>${{ total }}</p>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--================End Order Details Area =================-->
+{% endblock %}
+

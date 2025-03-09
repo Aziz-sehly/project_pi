@@ -86,20 +86,20 @@
 							</span>
                         <h4 class="text-section">Sections</h4>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item {% if app.request.get('_route') in ['app_product_index', 'app_product_new' ] %}active submenu{% endif %}">
                         <a data-bs-toggle="collapse" href="#base">
                             <i class="fas fa-layer-group"></i>
                             <p>Product</p>
                             <span class="caret"></span>
                         </a>
-                        <div class="collapse" id="base">
+                        <div class="collapse {% if app.request.get('_route') in ['app_product_index', 'app_product_new' ] %}show{% endif %}" id="base">
                             <ul class="nav nav-collapse">
-                                <li>
+                                <li class="{% if app.request.get('_route') == 'app_product_index' %}active{% endif %}">
                                     <a href="{{ path('app_product_index') }}">
                                         <span class="sub-item">List</span>
                                     </a>
                                 </li>
-                                <li>
+                                <li class="{% if app.request.get('_route') == 'app_product_new' %}active{% endif %}">
                                     <a href="{{ path('app_product_new') }}">
                                         <span class="sub-item">Add</span>
                                     </a>
